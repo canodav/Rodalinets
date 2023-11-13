@@ -1,0 +1,5 @@
+rodalinets.upf.edu {
+  reverse_proxy app:80  {
+    header_down Strict-Transport-Security max-age=31536000;
+  }
+}

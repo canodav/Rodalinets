@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta name="generator" content="Astro v2.10.15">
+
+    <!-- <link rel="preload" as="image" href={src} alt="Hero" /> -->
+    <title>About | Rodalinets</title>
+
+
+
+<link rel="canonical" href="https://rodalinets.upf.edu/about/">
+
+<meta name="description" content="Rodalinets">
+
+<meta name="robots" content="index, follow">
+
+<meta property="og:title" content="Rodalinets">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://rodalinets.upf.edu/opengraph.jpg">
+<meta property="og:url" content="https://rodalinets.upf.edu/about/">
+
+<meta property="og:image:url" content="https://rodalinets.upf.edu/opengraph.jpg">
+
+
+
+
+<meta property="og:image:alt" content="Rodalinets Homepage Screenshot">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@web3templates">
+
+
+
+
+<meta name="twitter:creator" content="@surjithctly">
+
+
+  <link rel="stylesheet" href="/_astro/404.f090537f.css" /></head>
+  <body>
+    <div class="max-w-screen-xl mx-auto px-5">
+  
+  <header class="flex flex-col lg:flex-row justify-between items-center my-5">
+    
+      <div class="flex w-full lg:w-auto items-center justify-between">
+        <a href="/" class="text-lg"><span class="font-bold text-slate-800">Rodali</span><span class="text-sky-500 font-bold">nets</span>
+        </a>
+        <div class="block lg:hidden">
+          <button id="astronav-menu" aria-label="Toggle Menu">
+  
+    <svg fill="currentColor" class="w-4 h-4 text-gray-800" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <title>Toggle Menu</title>
+      <path class="astronav-close-icon astronav-toggle hidden" fill-rule="evenodd" clip-rule="evenodd" d="M18.278 16.864a1 1 0 01-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 01-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 011.414-1.414l4.829 4.828 4.828-4.828a1 1 0 111.414 1.414l-4.828 4.829 4.828 4.828z"></path>
+      <path class="astronav-open-icon astronav-toggle" fill-rule="evenodd" d="M4 5h16a1 1 0 010 2H4a1 1 0 110-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2z"></path>
+    </svg>
+  
+</button>
+        </div>
+      </div>
+      <nav class="astronav-items astronav-toggle hidden w-full lg:w-auto mt-2 lg:flex lg:mt-0">
+    
+        <ul class="flex flex-col lg:flex-row lg:gap-3">
+          <li>
+                    <a href="/about" class="flex lg:px-3 py-2 items-center text-gray-600 hover:text-gray-900">
+                      <span> About</span>
+                      
+                    </a>
+                  </li><li>
+                    <a href="/blog" class="flex lg:px-3 py-2 items-center text-gray-600 hover:text-gray-900">
+                      <span> Blog</span>
+                      
+                    </a>
+                  </li><li>
+                    <a href="/contact" class="flex lg:px-3 py-2 items-center text-gray-600 hover:text-gray-900">
+                      <span> Contact</span>
+                      
+                    </a>
+                  </li>
+        </ul>
+        
+      
+</nav>
+    
+
+<script>(function(){const closeOnClick = false;
+
+["DOMContentLoaded", "astro:after-swap"].forEach((event) => {
+  document.addEventListener(event, addListeners);
+});
+
+// Function to clone and replace elements
+function cloneAndReplace(element) {
+  const clone = element.cloneNode(true);
+  element.parentNode.replaceChild(clone, element);
+}
+
+function addListeners() {
+  // Clean up existing listeners
+  const oldMenuButton = document.getElementById("astronav-menu");
+  if (oldMenuButton) {
+    cloneAndReplace(oldMenuButton);
+  }
+
+  const oldDropdownMenus = document.querySelectorAll(".astronav-dropdown");
+  oldDropdownMenus.forEach((menu) => {
+    cloneAndReplace(menu);
+  });
+
+  // Mobile nav toggle
+  const menuButton = document.getElementById("astronav-menu");
+  menuButton && menuButton.addEventListener("click", toggleMobileNav);
+
+  // Dropdown menus
+  const dropdownMenus = document.querySelectorAll(".astronav-dropdown");
+  dropdownMenus.forEach((menu) => {
+    const button = menu.querySelector("button");
+    button &&
+      button.addEventListener("click", (event) =>
+        toggleDropdownMenu(event, menu, dropdownMenus)
+      );
+
+    // Handle Submenu Dropdowns
+    const dropDownSubmenus = menu.querySelectorAll(
+      ".astronav-dropdown-submenu"
+    );
+
+    dropDownSubmenus.forEach((submenu) => {
+      const submenuButton = submenu.querySelector("button");
+      submenuButton &&
+        submenuButton.addEventListener("click", (event) => {
+          event.stopImmediatePropagation();
+          toggleSubmenuDropdown(event, submenu);
+        });
+    });
+  });
+
+  // Clicking away from dropdown will remove the dropdown class
+  document.addEventListener("click", closeAllDropdowns);
+
+  if (closeOnClick) {
+    handleCloseOnClick();
+  }
+}
+
+function toggleMobileNav() {
+  [...document.querySelectorAll(".astronav-toggle")].forEach((el) => {
+    el.classList.toggle("hidden");
+  });
+}
+
+function toggleDropdownMenu(event, menu, dropdownMenus) {
+  toggleMenu(menu);
+
+  // Close one dropdown when selecting another
+  Array.from(dropdownMenus)
+    .filter((el) => el !== menu && !menu.contains(el))
+    .forEach(closeMenu);
+
+  event.stopPropagation();
+}
+
+function toggleSubmenuDropdown(event, submenu) {
+  event.stopPropagation();
+  toggleMenu(submenu);
+
+  // Close sibling submenus at the same nesting level
+  const siblingSubmenus = submenu
+    .closest(".astronav-dropdown")
+    .querySelectorAll(".astronav-dropdown-submenu");
+  Array.from(siblingSubmenus)
+    .filter((el) => el !== submenu && !submenu.contains(el))
+    .forEach(closeMenu);
+}
+
+function closeAllDropdowns(event) {
+  const dropdownMenus = document.querySelectorAll(".dropdown-toggle");
+  const dropdownParent = document.querySelectorAll(
+    ".astronav-dropdown, .astronav-dropdown-submenu"
+  );
+  const isButtonInsideDropdown = [
+    ...document.querySelectorAll(
+      ".astronav-dropdown button, .astronav-dropdown-submenu button, #astronav-menu"
+    ),
+  ].some((button) => button.contains(event.target));
+  if (!isButtonInsideDropdown) {
+    dropdownMenus.forEach((d) => {
+      // console.log("I ran", d);
+      // if (!d.contains(event.target)) {
+      d.classList.remove("open");
+      d.removeAttribute("open");
+      d.classList.add("hidden");
+      // }
+    });
+    dropdownParent.forEach((d) => {
+      d.classList.remove("open");
+      d.removeAttribute("open");
+      d.setAttribute("aria-expanded", "false");
+    });
+  }
+}
+
+function toggleMenu(menu) {
+  menu.classList.toggle("open");
+  const expanded = menu.getAttribute("aria-expanded") === "true";
+  menu.setAttribute("aria-expanded", expanded ? "false" : "true");
+  menu.hasAttribute("open")
+    ? menu.removeAttribute("open")
+    : menu.setAttribute("open", "");
+
+  const dropdownToggle = menu.querySelector(".dropdown-toggle");
+  const dropdownExpanded = dropdownToggle.getAttribute("aria-expanded");
+  dropdownToggle.classList.toggle("hidden");
+  dropdownToggle.setAttribute(
+    "aria-expanded",
+    dropdownExpanded === "true" ? "false" : "true"
+  );
+}
+
+function closeMenu(menu) {
+  // console.log("closing", menu);
+  menu.classList.remove("open");
+  menu.removeAttribute("open");
+  menu.setAttribute("aria-expanded", "false");
+  const dropdownToggles = menu.querySelectorAll(".dropdown-toggle");
+  dropdownToggles.forEach((toggle) => {
+    toggle.classList.add("hidden");
+    toggle.setAttribute("aria-expanded", "false");
+  });
+}
+
+function handleCloseOnClick() {
+  const navMenuItems = document.querySelector(".astronav-items");
+  const navToggle = document.getElementById("astronav-menu");
+  const navLink = navMenuItems && navMenuItems.querySelectorAll("a");
+
+  const MenuIcons = navToggle.querySelectorAll(".astronav-toggle");
+
+  navLink &&
+    navLink.forEach((item) => {
+      item.addEventListener("click", () => {
+        navMenuItems?.classList.add("hidden");
+        MenuIcons.forEach((el) => {
+          el.classList.toggle("hidden");
+        });
+      });
+    });
+}
+})();</script>
+        <!--
+
+    <div>
+      <div class="hidden lg:flex items-center gap-4">
+        <a href="#">Log in</a>
+        <Link href="#" size="md">Sign up</Link>
+      </div>
+    </div>
+      -->
+
+  </header>
+
+</div>
+    
+  <div class="max-w-screen-xl mx-auto px-5">
+  
+    <div class="mt-16 text-center">
+  <h1 class="text-4xl lg:text-5xl font-bold lg:tracking-tight">
+    About
+  </h1>
+  <p class="text-lg mt-4 text-slate-600">
+    We are a small passionate team.
+  </p>
+</div>
+
+    <div class="flex flex-col gap-3 mx-auto max-w-4xl mt-16">
+      <h2 class="font-bold text-3xl text-gray-800">
+        Empowering the world with Astro.
+      </h2>
+      <p class="text-lg leading-relaxed text-slate-500">
+        We're a multi-cultural team from around the world! We come from diverse
+        backgrounds, bringing different personalities, experiences and skills to
+        the job. This is what makes our team so special.
+      </p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-10 mx-auto max-w-4xl mt-12">
+      <div class="group">
+            <div class="w-full aspect-square">
+              <picture>
+	<source type="image/avif" srcset="/_astro/photo-1580489944761-15a19d654956_1jmTc8.avif 200w,/_astro/photo-1580489944761-15a19d654956_1k7Cgb.avif 400w" sizes="(max-width: 800px) 100vw, 400px"><source type="image/webp" srcset="/_astro/photo-1580489944761-15a19d654956_Z1ER8Eb.webp 200w,/_astro/photo-1580489944761-15a19d654956_Z1E7pA8.webp 400w" sizes="(max-width: 800px) 100vw, 400px">
+	<img alt="Janette Lynch" fit="cover" position="center" background="#ffffff" src="/_astro/photo-1580489944761-15a19d654956_Z1E7pA8.webp" loading="lazy" decoding="async" class="w-full rounded-md rounded transition group-hover:-translate-y-1 group-hover:shadow-xl">
+</picture>
+            </div>
+
+            <div class="mt-4 text-center">
+              <h2 class="text-lg text-gray-800">
+                Janette Lynch
+              </h2>
+              <h3 class="text-sm text-slate-500">
+                Senior Director
+              </h3>
+            </div>
+          </div><div class="group">
+            <div class="w-full aspect-square">
+              <picture>
+	<source type="image/avif" srcset="/_astro/photo-1633332755192-727a05c4013d_Z1cpScO.avif 200w,/_astro/photo-1633332755192-727a05c4013d_Z1bFa8L.avif 400w" sizes="(max-width: 800px) 100vw, 400px"><source type="image/webp" srcset="/_astro/photo-1633332755192-727a05c4013d_SwcJN.webp 200w,/_astro/photo-1633332755192-727a05c4013d_TgUNQ.webp 400w" sizes="(max-width: 800px) 100vw, 400px">
+	<img alt="Marcell Ziemann" fit="cover" position="center" background="#ffffff" src="/_astro/photo-1633332755192-727a05c4013d_TgUNQ.webp" loading="lazy" decoding="async" class="w-full rounded-md rounded transition group-hover:-translate-y-1 group-hover:shadow-xl">
+</picture>
+            </div>
+
+            <div class="mt-4 text-center">
+              <h2 class="text-lg text-gray-800">
+                Marcell Ziemann
+              </h2>
+              <h3 class="text-sm text-slate-500">
+                Principal Strategist
+              </h3>
+            </div>
+          </div><div class="group">
+            <div class="w-full aspect-square">
+              <picture>
+	<source type="image/avif" srcset="/_astro/photo-1535713875002-d1d0cf377fde_1JAgIo.avif 200w,/_astro/photo-1535713875002-d1d0cf377fde_1KkYMr.avif 400w" sizes="(max-width: 800px) 100vw, 400px"><source type="image/webp" srcset="/_astro/photo-1535713875002-d1d0cf377fde_Z1eDL7U.webp 200w,/_astro/photo-1535713875002-d1d0cf377fde_Z1dT33R.webp 400w" sizes="(max-width: 800px) 100vw, 400px">
+	<img alt="Robert Palmer" fit="cover" position="center" background="#ffffff" src="/_astro/photo-1535713875002-d1d0cf377fde_Z1dT33R.webp" loading="lazy" decoding="async" class="w-full rounded-md rounded transition group-hover:-translate-y-1 group-hover:shadow-xl">
+</picture>
+            </div>
+
+            <div class="mt-4 text-center">
+              <h2 class="text-lg text-gray-800">
+                Robert Palmer
+              </h2>
+              <h3 class="text-sm text-slate-500">
+                Marketing Engineer
+              </h3>
+            </div>
+          </div>
+    </div>
+  
+</div>
+
+    <footer class="my-20">
+ 
+</footer>
+    
+  </body>
+</html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta name="generator" content="Astro v2.10.15">
+
+    <!-- <link rel="preload" as="image" href={src} alt="Hero" /> -->
+    <title>Blog | Rodalinets</title>
+
+
+
+<link rel="canonical" href="https://rodalinets.upf.edu/blog/">
+
+<meta name="description" content="Rodalinets">
+
+<meta name="robots" content="index, follow">
+
+<meta property="og:title" content="Rodalinets">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://rodalinets.upf.edu/opengraph.jpg">
+<meta property="og:url" content="https://rodalinets.upf.edu/blog/">
+
+<meta property="og:image:url" content="https://rodalinets.upf.edu/opengraph.jpg">
+
+
+
+
+<meta property="og:image:alt" content="Rodalinets Homepage Screenshot">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@web3templates">
+
+
+
+
+<meta name="twitter:creator" content="@surjithctly">
+
+
+  <link rel="stylesheet" href="/_astro/404.f090537f.css" /></head>
+  <body>
+    <div class="max-w-screen-xl mx-auto px-5">
+  
+  <header class="flex flex-col lg:flex-row justify-between items-center my-5">
+    
+      <div class="flex w-full lg:w-auto items-center justify-between">
+        <a href="/" class="text-lg"><span class="font-bold text-slate-800">Rodali</span><span class="text-sky-500 font-bold">nets</span>
+        </a>
+        <div class="block lg:hidden">
+          <button id="astronav-menu" aria-label="Toggle Menu">
+  
+    <svg fill="currentColor" class="w-4 h-4 text-gray-800" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <title>Toggle Menu</title>
+      <path class="astronav-close-icon astronav-toggle hidden" fill-rule="evenodd" clip-rule="evenodd" d="M18.278 16.864a1 1 0 01-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 01-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 011.414-1.414l4.829 4.828 4.828-4.828a1 1 0 111.414 1.414l-4.828 4.829 4.828 4.828z"></path>
+      <path class="astronav-open-icon astronav-toggle" fill-rule="evenodd" d="M4 5h16a1 1 0 010 2H4a1 1 0 110-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2z"></path>
+    </svg>
+  
+</button>
+        </div>
+      </div>
+      <nav class="astronav-items astronav-toggle hidden w-full lg:w-auto mt-2 lg:flex lg:mt-0">
+    
+        <ul class="flex flex-col lg:flex-row lg:gap-3">
+          <li>
+                    <a href="/about" class="flex lg:px-3 py-2 items-center text-gray-600 hover:text-gray-900">
+                      <span> About</span>
+                      
+                    </a>
+                  </li><li>
+                    <a href="/blog" class="flex lg:px-3 py-2 items-center text-gray-600 hover:text-gray-900">
+                      <span> Blog</span>
+                      
+                    </a>
+                  </li><li>
+                    <a href="/contact" class="flex lg:px-3 py-2 items-center text-gray-600 hover:text-gray-900">
+                      <span> Contact</span>
+                      
+                    </a>
+                  </li>
+        </ul>
+        
+      
+</nav>
+    
+
+<script>(function(){const closeOnClick = false;
+
+["DOMContentLoaded", "astro:after-swap"].forEach((event) => {
+  document.addEventListener(event, addListeners);
+});
+
+// Function to clone and replace elements
+function cloneAndReplace(element) {
+  const clone = element.cloneNode(true);
+  element.parentNode.replaceChild(clone, element);
+}
+
+function addListeners() {
+  // Clean up existing listeners
+  const oldMenuButton = document.getElementById("astronav-menu");
+  if (oldMenuButton) {
+    cloneAndReplace(oldMenuButton);
+  }
+
+  const oldDropdownMenus = document.querySelectorAll(".astronav-dropdown");
+  oldDropdownMenus.forEach((menu) => {
+    cloneAndReplace(menu);
+  });
+
+  // Mobile nav toggle
+  const menuButton = document.getElementById("astronav-menu");
+  menuButton && menuButton.addEventListener("click", toggleMobileNav);
+
+  // Dropdown menus
+  const dropdownMenus = document.querySelectorAll(".astronav-dropdown");
+  dropdownMenus.forEach((menu) => {
+    const button = menu.querySelector("button");
+    button &&
+      button.addEventListener("click", (event) =>
+        toggleDropdownMenu(event, menu, dropdownMenus)
+      );
+
+    // Handle Submenu Dropdowns
+    const dropDownSubmenus = menu.querySelectorAll(
+      ".astronav-dropdown-submenu"
+    );
+
+    dropDownSubmenus.forEach((submenu) => {
+      const submenuButton = submenu.querySelector("button");
+      submenuButton &&
+        submenuButton.addEventListener("click", (event) => {
+          event.stopImmediatePropagation();
+          toggleSubmenuDropdown(event, submenu);
+        });
+    });
+  });
+
+  // Clicking away from dropdown will remove the dropdown class
+  document.addEventListener("click", closeAllDropdowns);
+
+  if (closeOnClick) {
+    handleCloseOnClick();
+  }
+}
+
+function toggleMobileNav() {
+  [...document.querySelectorAll(".astronav-toggle")].forEach((el) => {
+    el.classList.toggle("hidden");
+  });
+}
+
+function toggleDropdownMenu(event, menu, dropdownMenus) {
+  toggleMenu(menu);
+
+  // Close one dropdown when selecting another
+  Array.from(dropdownMenus)
+    .filter((el) => el !== menu && !menu.contains(el))
+    .forEach(closeMenu);
+
+  event.stopPropagation();
+}
+
+function toggleSubmenuDropdown(event, submenu) {
+  event.stopPropagation();
+  toggleMenu(submenu);
+
+  // Close sibling submenus at the same nesting level
+  const siblingSubmenus = submenu
+    .closest(".astronav-dropdown")
+    .querySelectorAll(".astronav-dropdown-submenu");
+  Array.from(siblingSubmenus)
+    .filter((el) => el !== submenu && !submenu.contains(el))
+    .forEach(closeMenu);
+}
+
+function closeAllDropdowns(event) {
+  const dropdownMenus = document.querySelectorAll(".dropdown-toggle");
+  const dropdownParent = document.querySelectorAll(
+    ".astronav-dropdown, .astronav-dropdown-submenu"
+  );
+  const isButtonInsideDropdown = [
+    ...document.querySelectorAll(
+      ".astronav-dropdown button, .astronav-dropdown-submenu button, #astronav-menu"
+    ),
+  ].some((button) => button.contains(event.target));
+  if (!isButtonInsideDropdown) {
+    dropdownMenus.forEach((d) => {
+      // console.log("I ran", d);
+      // if (!d.contains(event.target)) {
+      d.classList.remove("open");
+      d.removeAttribute("open");
+      d.classList.add("hidden");
+      // }
+    });
+    dropdownParent.forEach((d) => {
+      d.classList.remove("open");
+      d.removeAttribute("open");
+      d.setAttribute("aria-expanded", "false");
+    });
+  }
+}
+
+function toggleMenu(menu) {
+  menu.classList.toggle("open");
+  const expanded = menu.getAttribute("aria-expanded") === "true";
+  menu.setAttribute("aria-expanded", expanded ? "false" : "true");
+  menu.hasAttribute("open")
+    ? menu.removeAttribute("open")
+    : menu.setAttribute("open", "");
+
+  const dropdownToggle = menu.querySelector(".dropdown-toggle");
+  const dropdownExpanded = dropdownToggle.getAttribute("aria-expanded");
+  dropdownToggle.classList.toggle("hidden");
+  dropdownToggle.setAttribute(
+    "aria-expanded",
+    dropdownExpanded === "true" ? "false" : "true"
+  );
+}
+
+function closeMenu(menu) {
+  // console.log("closing", menu);
+  menu.classList.remove("open");
+  menu.removeAttribute("open");
+  menu.setAttribute("aria-expanded", "false");
+  const dropdownToggles = menu.querySelectorAll(".dropdown-toggle");
+  dropdownToggles.forEach((toggle) => {
+    toggle.classList.add("hidden");
+    toggle.setAttribute("aria-expanded", "false");
+  });
+}
+
+function handleCloseOnClick() {
+  const navMenuItems = document.querySelector(".astronav-items");
+  const navToggle = document.getElementById("astronav-menu");
+  const navLink = navMenuItems && navMenuItems.querySelectorAll("a");
+
+  const MenuIcons = navToggle.querySelectorAll(".astronav-toggle");
+
+  navLink &&
+    navLink.forEach((item) => {
+      item.addEventListener("click", () => {
+        navMenuItems?.classList.add("hidden");
+        MenuIcons.forEach((el) => {
+          el.classList.toggle("hidden");
+        });
+      });
+    });
+}
+})();</script>
+        <!--
+
+    <div>
+      <div class="hidden lg:flex items-center gap-4">
+        <a href="#">Log in</a>
+        <Link href="#" size="md">Sign up</Link>
+      </div>
+    </div>
+      -->
+
+  </header>
+
+</div>
+    
+  <div class="max-w-screen-xl mx-auto px-5">
+  
+    <div class="mt-16 text-center">
+  <h1 class="text-4xl lg:text-5xl font-bold lg:tracking-tight">
+    Our Blog
+  </h1>
+  <p class="text-lg mt-4 text-slate-600">
+    
+        We write about building startups and thoughts going on our mind.
+      
+  </p>
+</div>
+    <main class="mt-16">
+      <ul class="grid gap-16 max-w-4xl mx-auto">
+        <li>
+              <a href="/blog/essential-data-structures-algorithms">
+                <div class="grid md:grid-cols-2 gap-5 md:gap-10 items-center">
+                  <picture>
+	<source type="image/avif" srcset="/_astro/photo-1627163439134-7a8c47e08208_Z2wA0Dc.avif 200w,/_astro/photo-1627163439134-7a8c47e08208_Z1CPTQw.avif 400w,/_astro/photo-1627163439134-7a8c47e08208_1C4iw8.avif 800w" sizes="(max-width: 800px) 100vw, 800px"><source type="image/webp" srcset="/_astro/photo-1627163439134-7a8c47e08208_1m0JkF.webp 200w,/_astro/photo-1627163439134-7a8c47e08208_2fJP7l.webp 400w,/_astro/photo-1627163439134-7a8c47e08208_qsTG4.webp 800w" sizes="(max-width: 800px) 100vw, 800px">
+	<img alt="data structures &#38; algorithms" fit="cover" position="center" background="#ffffff" src="/_astro/photo-1627163439134-7a8c47e08208_qsTG4.webp" loading="eager" decoding="sync" class="w-full rounded-md">
+</picture>
+                  <div>
+                    <span class="text-blue-400 uppercase tracking-wider text-sm font-medium">
+                      Courses
+                    </span>
+
+                    <h2 class="text-3xl font-semibold leading-snug tracking-tight mt-1 ">
+                       Introduction to the Essential Data Structures &amp; Algorithms
+                    </h2>
+
+                    <div class="flex gap-2 mt-3">
+                      <span class="text-gray-400">
+                        Marcell Ziemann
+                      </span>
+                      <span class="text-gray-400">• </span>
+                      <time class="text-gray-400" datetime="2022-11-09T15:39:00.000Z">
+                        Wed Nov 09 2022
+                      </time>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li><li>
+              <a href="/blog/complete-guide-fullstack-development">
+                <div class="grid md:grid-cols-2 gap-5 md:gap-10 items-center">
+                  <picture>
+	<source type="image/avif" srcset="/_astro/photo-1593720213428-28a5b9e94613_ZxFLxw.avif 200w,/_astro/photo-1593720213428-28a5b9e94613_l3je9.avif 400w,/_astro/photo-1593720213428-28a5b9e94613_Z1tdBc8.avif 800w" sizes="(max-width: 800px) 100vw, 800px"><source type="image/webp" srcset="/_astro/photo-1593720213428-28a5b9e94613_Z1JhanA.webp 200w,/_astro/photo-1593720213428-28a5b9e94613_ZPx4AU.webp 400w,/_astro/photo-1593720213428-28a5b9e94613_2pn8LJ.webp 800w" sizes="(max-width: 800px) 100vw, 800px">
+	<img alt="full stack web development" fit="cover" position="center" background="#ffffff" src="/_astro/photo-1593720213428-28a5b9e94613_2pn8LJ.webp" loading="eager" decoding="sync" class="w-full rounded-md">
+</picture>
+                  <div>
+                    <span class="text-blue-400 uppercase tracking-wider text-sm font-medium">
+                      Tutorials
+                    </span>
+
+                    <h2 class="text-3xl font-semibold leading-snug tracking-tight mt-1 ">
+                      The Complete Guide to Full Stack Web Development
+                    </h2>
+
+                    <div class="flex gap-2 mt-3">
+                      <span class="text-gray-400">
+                        Janette Lynch
+                      </span>
+                      <span class="text-gray-400">• </span>
+                      <time class="text-gray-400" datetime="2022-11-08T10:39:00.000Z">
+                        Tue Nov 08 2022
+                      </time>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li><li>
+              <a href="/blog/how-to-become-frontend-master">
+                <div class="grid md:grid-cols-2 gap-5 md:gap-10 items-center">
+                  <picture>
+	<source type="image/avif" srcset="/_astro/photo-1667372393119-3d4c48d07fc9_1lfsQm.avif 200w,/_astro/photo-1667372393119-3d4c48d07fc9_2eYyD2.avif 400w,/_astro/photo-1667372393119-3d4c48d07fc9_pHDcK.avif 800w" sizes="(max-width: 800px) 100vw, 800px"><source type="image/webp" srcset="/_astro/photo-1667372393119-3d4c48d07fc9_9E51i.webp 200w,/_astro/photo-1667372393119-3d4c48d07fc9_13oaMX.webp 400w,/_astro/photo-1667372393119-3d4c48d07fc9_ZKRJCj.webp 800w" sizes="(max-width: 800px) 100vw, 800px">
+	<img alt="frontend master" fit="cover" position="center" background="#ffffff" src="/_astro/photo-1667372393119-3d4c48d07fc9_ZKRJCj.webp" loading="eager" decoding="sync" class="w-full rounded-md">
+</picture>
+                  <div>
+                    <span class="text-blue-400 uppercase tracking-wider text-sm font-medium">
+                      Tutorials
+                    </span>
+
+                    <h2 class="text-3xl font-semibold leading-snug tracking-tight mt-1 ">
+                      How to become a Frontend Master
+                    </h2>
+
+                    <div class="flex gap-2 mt-3">
+                      <span class="text-gray-400">
+                        Connor Lopez
+                      </span>
+                      <span class="text-gray-400">• </span>
+                      <time class="text-gray-400" datetime="2022-11-07T14:39:00.000Z">
+                        Mon Nov 07 2022
+                      </time>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li><li>
+              <a href="/blog/kitchensink">
+                <div class="grid md:grid-cols-2 gap-5 md:gap-10 items-center">
+                  <picture>
+	<source type="image/avif" srcset="/_astro/photo-1542393545-10f5cde2c810_1zajTB.avif 200w,/_astro/photo-1542393545-10f5cde2c810_2sTpGh.avif 400w,/_astro/photo-1542393545-10f5cde2c810_DCug0.avif 800w" sizes="(max-width: 800px) 100vw, 800px"><source type="image/webp" srcset="/_astro/photo-1542393545-10f5cde2c810_nyV4x.webp 200w,/_astro/photo-1542393545-10f5cde2c810_1hj1Qd.webp 400w,/_astro/photo-1542393545-10f5cde2c810_ZwWSz4.webp 800w" sizes="(max-width: 800px) 100vw, 800px">
+	<img alt="typography" fit="cover" position="center" background="#ffffff" src="/_astro/photo-1542393545-10f5cde2c810_ZwWSz4.webp" loading="lazy" decoding="async" class="w-full rounded-md">
+</picture>
+                  <div>
+                    <span class="text-blue-400 uppercase tracking-wider text-sm font-medium">
+                      Technology
+                    </span>
+
+                    <h2 class="text-3xl font-semibold leading-snug tracking-tight mt-1 ">
+                      Typography Example Post
+                    </h2>
+
+                    <div class="flex gap-2 mt-3">
+                      <span class="text-gray-400">
+                        Charles North
+                      </span>
+                      <span class="text-gray-400">• </span>
+                      <time class="text-gray-400" datetime="2022-11-05T14:36:00.000Z">
+                        Sat Nov 05 2022
+                      </time>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
+      </ul>
+    </main>
+  
+</div>
+
+    <footer class="my-20">
+ 
+</footer>
+    
+  </body>
+</html>
