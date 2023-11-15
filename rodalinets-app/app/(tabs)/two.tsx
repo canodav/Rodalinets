@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { Text, View } from '../../components/Themed';
+import { Text, View } from '@/components/Themed';
 
 export default function TabTwoScreen() {
   return (
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins_Bold'
   },
   separator: {
     marginVertical: 30,

@@ -4,6 +4,8 @@ import { StyleSheet } from 'react-native';
 import { Text, View } from '../components/Themed';
 
 export default function NotFoundScreen() {
+
+
   return (
     <>
       <Stack.Screen options={{ title: 'Oops!' }} />
@@ -27,7 +29,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins_Bold'
   },
   link: {
     marginTop: 15,
