@@ -11,6 +11,7 @@ export type SelectInputProps = {
     placeholder: string,
     label: string,
     style?: any,
+    value: Station | null,
     onSelect: (station: Station) => void
 }
 
@@ -21,4 +22,8 @@ export type TrainArrival = {
     real_departure_time: string;
     direction: number;
     StationId: number;
+    arrival_time: string,
+    estimated_arrival_time: string
 }
+
+

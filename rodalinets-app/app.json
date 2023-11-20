@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.canodav.rodalinetsapp"
+      "package": "com.canodav.rodalinets"
     },
     "web": {
       "bundler": "metro",

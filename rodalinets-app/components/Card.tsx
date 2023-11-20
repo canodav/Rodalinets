@@ -1,31 +1,93 @@
+import { useState, useRef } from 'react'
+import { Text, View, StyleSheet, Touchable, Pressable } from 'react-native'
+import Animated, { FadeInLeft, useAnimatedStyle, withTiming, useSharedValue, SharedTransition } from 'react-native-reanimated';
+import { Link } from 'expo-router';
+import { AntDesign } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import { StationProgress } from '@/components/StationProgress';
 import Colors from '@/constants/Colors'
-import { Text, View, StyleSheet } from 'react-native'
-import Animated, { FadeInLeft } from 'react-native-reanimated';
+import { useStationStore } from '@/stores/stationStore';
+
 
 type cardProps = {
     departure_time : string
     real_departure_time: string,
     animationDelay?: number,
+    id: number,
 }
 
-export const Card = ({departure_time, real_departure_time, animationDelay} : cardProps) => {
+
+export const Card = ({id, departure_time, real_departure_time, animationDelay} : cardProps) => {
+    const [expanded, setExpanded] = useState<boolean>(false)
+    const animationHeight = useSharedValue(0);
+    const arrowAnimation = useSharedValue(0);
+
+    const stations =  useStationStore(state => state.stations)
+    const departureStation = useStationStore(state => state.departureStation);
+    const destinationStation = useStationStore(state => state.destinationStation);
+
+    const toggleCard = () => {
+        animationHeight.value = expanded ? 0 : 1; 
+        arrowAnimation.value = expanded ? -180 : 0;
+
+        setExpanded(!expanded)
+    }
+
+
+    const heightAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            height: withTiming(animationHeight.value * 75, { duration: 300 })
+        };
+    });
+
+    const arrowAnimatedStyle = useAnimatedStyle(() => {
+        const rotation = `${animationHeight.value * 180}deg`; 
+        return {
+            transform: [{ rotateZ: withTiming(rotation, { duration: 300 }) }],
+        };
+    });
 
     return (
-      <View /*entering={FadeInLeft.duration(400).delay(animationDelay ? animationDelay : 200)}  */ style={styles.container}>
-        <Text style={styles.label}>Estimated Departure Time:</Text><Text style={{...styles.text, ...styles.primaryText}}>{real_departure_time}</Text>
-        <Text style={{...styles.label, fontSize: 14} }>Scheduled Time:</Text><Text style={{...styles.text, ...styles.secondaryText}}>{departure_time}</Text>
-      </View>
+        <Animated.View entering={FadeInLeft.duration(400).delay(200)}  >
+            {/*<Link href={`/trainarrival/${id}`} style={{height: '100%', flex: 1}} asChild>*/}
+                <Pressable>
+                    <View style={styles.container}  >
+                        <View>
+                            <Animated.View sharedTransitionTag='sharedTag'>
+                                <Text style={styles.label}>Estimated Departure Time:</Text><Text style={{...styles.text, ...styles.primaryText}}>{real_departure_time}</Text>
+                            </Animated.View>
+                            <Animated.View  sharedTransitionTag='sharedTag'>
+                                <Text style={{...styles.label, fontSize: 14} }>Scheduled Time:</Text><Text style={{...styles.text, ...styles.secondaryText}}>{departure_time}</Text>
+                            </Animated.View>
+                        </View>
+                        <TouchableOpacity onPress={toggleCard} style={{justifyContent: 'flex-end', height: '100%'}}>
+                            <Animated.View style={arrowAnimatedStyle}>
+                                <AntDesign name="down" size={40} color="white" />
+                            </Animated.View>
+                        </TouchableOpacity>
+                    </View>
+                </Pressable>
+            {/*</Link>*/}
+            <Animated.View style={[{backgroundColor: Colors.gray, overflow: 'hidden', borderBottomLeftRadius: 10, borderBottomRightRadius: 10,}, heightAnimatedStyle]}>
+                <StationProgress stations={stations} currentStation={departureStation} />
+            </Animated.View>
+        </Animated.View>
     )
 }
 
 const styles = StyleSheet.create({
-
     container: {
         width: '100%',
         backgroundColor: Colors.tint,
         borderRadius: 10,
         paddingVertical: 14,
+        marginBottom: 0,
         paddingHorizontal: 20,
+        elevation: 2,
+        height: 150,
+        flexDirection: 'row',    
+        justifyContent: 'space-between'    
     },
     text: {
         color: Colors.background,

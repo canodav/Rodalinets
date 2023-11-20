@@ -57,23 +57,57 @@ function RootLayoutNav() {
     const colorScheme = useColorScheme();
 
     return (
-      <Stack>
-          <Stack.Screen
-              name="(tabs)"
-              options={{
-                  headerShown: true,
-                  headerStyle: {
-                    backgroundColor: Colors.background,
-                  },
-                  headerShadowVisible: false,
-                  headerTitleAlign: 'center',
-                  headerTitle: (props) => (
-                      <Text style={{ fontFamily: "Poppins_Black", fontSize: 30, lineHeight: 70 }}>
-                          RODALI<Text style={{color: Colors.tint}}>NETS</Text>
-                      </Text>
-                  ),
-              }}
-          />
-      </Stack>
+        <Stack>
+            <Stack.Screen
+                name="index"
+                options={{
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: Colors.background,
+                    },
+                    headerShadowVisible: false,
+                    headerTitleAlign: 'center',
+                    headerTitle: (props) => (
+                        <Text style={{ fontFamily: "Poppins_Black", fontSize: 30, lineHeight: 50 }}>
+                            RODALI<Text style={{color: Colors.tint}}>NETS</Text>
+                        </Text>
+                    ),
+                }}
+            />
+            <Stack.Screen
+                name="travel"
+                options={{
+                    presentation: 'containedModal',
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: Colors.background,
+                    },
+                    headerShadowVisible: false,
+                    headerTitleAlign: 'center',
+                    headerTitle: (props) => (
+                        <Text style={{ fontFamily: "Poppins_Black", fontSize: 30, lineHeight: 50 }}>
+                            RODALI<Text style={{color: Colors.tint}}>NETS</Text>
+                        </Text>
+                    ),
+                }}
+            />
+               <Stack.Screen
+                name="trainarrival"
+                options={{
+                    presentation: 'containedModal',
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: Colors.background,
+                    },
+                    headerShadowVisible: false,
+                    headerTitleAlign: 'center',
+                    headerTitle: (props) => (
+                        <Text style={{ fontFamily: "Poppins_Black", fontSize: 30, lineHeight: 70 }}>
+                            RODALI<Text style={{color: Colors.tint}}>NETS</Text>
+                        </Text>
+                    ),
+                }}
+            />
+        </Stack>
     );
 }
