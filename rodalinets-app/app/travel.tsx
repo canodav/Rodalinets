@@ -1,22 +1,138 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import Animated, { FadeInLeft } from "react-native-reanimated";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, Link } from "expo-router";
+import * as Location from 'expo-location';
+import * as TaskManager from 'expo-task-manager';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useTimetableStore } from "@/stores/timetableStore";
+import { useTravelStore } from "@/stores/travelStore";
 import { TrainArrival } from "@/types";
 import Colors from "@/constants/Colors";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 import { useStationStore } from "@/stores/stationStore";
+
+let globalTravelId : null | number = null;
+
+const LOCATION_TRACKING =  'background-location-task';
+
+const startLocationTracking = async () => {
+
+    await Location.startLocationUpdatesAsync(LOCATION_TRACKING, {
+        accuracy: Location.Accuracy.High,
+        timeInterval: 30000,
+        showsBackgroundLocationIndicator: true,
+        distanceInterval: 1,
+        foregroundService: {
+            notificationTitle: 'Using your location',
+            notificationBody: 'To turn off, go back to the app and switch something off.',
+        },
+    });
+    const hasStarted = await Location.hasStartedLocationUpdatesAsync(
+        LOCATION_TRACKING
+    );
+  };
+
+  
+
 
 const Travel = () => {
     const timetable = useTimetableStore((state) => state.timetable);
     const departureStation = useStationStore((state) => state.departureStation);
-    const destinationStation = useStationStore(
-        (state) => state.destinationStation
-    );
+    const destinationStation = useStationStore((state) => state.destinationStation);
+    const isTravelStarted = useTravelStore((state) => state.isTravelStarted);
+    const setTravelStarted = useTravelStore((state) => state.setTravelStarted);
+    const setTravelId = useTravelStore((state) => state.setTravelId);
 
+
+    const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
+    const [userId, setUserId] = useState<string | null>(null);
+    
     const trainArrival = timetable[0];
+
+    useEffect(() => {
+        startTravel();
+    },[])
+
+
+
+  const stopLocation = () => {
+    setTravelStarted(false);
+    TaskManager.isTaskRegisteredAsync(LOCATION_TRACKING)
+      .then((tracking) => {
+          if (tracking) {
+              Location.stopLocationUpdatesAsync(LOCATION_TRACKING);
+          }
+      })
+  }
+
+  const startTravel = async () => {
+    if(!isTravelStarted || !departureStation || !destinationStation){
+        return;
+    }
+
+    const userId = await AsyncStorage.getItem("userId", (uuid) => {console.log(uuid)});
+    setUserId(userId); 
+
+    fetch( "https://rodalinets.upf.edu/travel?" + new URLSearchParams({
+      fromStation: departureStation.name,
+      toStation: destinationStation.name,
+      userId: userId
+    }),
+      {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then(response => {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        throw new Error(`Request failed with status: ${response.status}`);
+      }
+    })
+    .then(data => {
+        startLocationTracking();
+        setTravelId(data.id);
+        const timerId = setTimeout(() => {
+          stopLocation();
+          endTravel();
+        }, 20 * 60 * 1000);
+        setTimerId(timerId);
+        globalTravelId = data.id;
+    })
+    
+  };
+
+  const endTravel = () => {
+    fetch( "https://rodalinets.upf.edu/travel/" + globalTravelId,
+    {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify( {
+        endTime: new Date()
+      })
+    }).then(response => {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        throw new Error(`Request failed with status: ${response.status}`);
+      }
+    }).then(data => {
+        /*
+      if (timerId) {
+        clearTimeout(timerId);
+        setTimerId(null);
+      }
+      */
+      stopLocation();
+    });
+  };
 
     return (
         <View style={styles.container}>
@@ -49,7 +165,13 @@ const Travel = () => {
                         </View>
                     </View>
                 </View>
-                
+                    <Link href={"/"}  
+                    style={{ borderRadius: 10, paddingHorizontal: 30, paddingTop: 12, paddingBottom: 10, backgroundColor: Colors.background}} asChild >
+                        <Pressable onPress={() => endTravel()} style={{ borderRadius: 10, paddingHorizontal: 30, paddingTop: 12, paddingBottom: 10, backgroundColor: Colors.background}}>
+                            <Text 
+                            style={{fontFamily: 'Poppins_Bold', color: Colors.text , textAlign: 'center'}}>End travel<AntDesign name="right" /></Text>
+                        </Pressable>
+                    </Link>
             </View>
             {/*
           <Animated.View style={[{backgroundColor: Colors.gray, overflow: 'hidden', borderBottomLeftRadius: 10, borderBottomRightRadius: 10,}]}>
@@ -111,3 +233,42 @@ const styles = StyleSheet.create({
         color: Colors.background
     },
 });
+
+
+
+TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
+    if (error) {
+        console.log('LOCATION_TRACKING task ERROR:', error);
+        return;
+    }
+    if (data) {
+        const { locations } = data;
+        let lat = locations[0].coords.latitude;
+        let long = locations[0].coords.longitude;
+  
+        l1 = lat;
+        l2 = long;
+  
+        let location = await Location.getCurrentPositionAsync({});
+         
+        try {
+          fetch("https://rodalinets.upf.edu/location?" + new URLSearchParams({
+            id: globalTravelId,
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
+          }),
+            {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          }).then(response => response.json())
+          .then(data => {
+          });
+    
+        } catch (error) {
+          console.log('Error fetching location: ' + error.message);
+        }
+      }
+  });

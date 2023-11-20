@@ -5,5 +5,4 @@
 expo-env.d.ts
 .expo
 node_modules
-package.json
 # @end expo-cli

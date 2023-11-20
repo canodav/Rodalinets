@@ -32,7 +32,11 @@
     "react-native-screens": "~3.22.0",
     "react-native-web": "~0.19.6",
     "zustand": "^4.4.6",
-    "expo-location": "~16.1.0"
+    "expo-location": "~16.1.0",
+    "expo-task-manager": "~11.3.0",
+    "@react-native-async-storage/async-storage": "1.18.2",
+    "expo-random": "~13.2.0",
+    "expo-crypto": "~12.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
