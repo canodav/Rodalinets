@@ -13,28 +13,6 @@ import Colors from "@/constants/Colors";
 import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 import { useStationStore } from "@/stores/stationStore";
 
-let globalTravelId : null | number = null;
-
-const LOCATION_TRACKING =  'background-location-task';
-
-const startLocationTracking = async () => {
-
-    await Location.startLocationUpdatesAsync(LOCATION_TRACKING, {
-        accuracy: Location.Accuracy.High,
-        timeInterval: 30000,
-        showsBackgroundLocationIndicator: true,
-        distanceInterval: 1,
-        foregroundService: {
-            notificationTitle: 'Using your location',
-            notificationBody: 'To turn off, go back to the app and switch something off.',
-        },
-    });
-    const hasStarted = await Location.hasStartedLocationUpdatesAsync(
-        LOCATION_TRACKING
-    );
-  };
-
-  
 
 
 const Travel = () => {
@@ -44,100 +22,76 @@ const Travel = () => {
     const isTravelStarted = useTravelStore((state) => state.isTravelStarted);
     const setTravelStarted = useTravelStore((state) => state.setTravelStarted);
     const setTravelId = useTravelStore((state) => state.setTravelId);
+    const travelId = useTravelStore((state) => state.travelId);
 
 
     const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
+    const [countdown, setCountdown] = useState(20 * 60); 
     const [userId, setUserId] = useState<string | null>(null);
     
     const trainArrival = timetable[0];
 
-    useEffect(() => {
-        startTravel();
-    },[])
+    const startTravel = async () => {
+      if(isTravelStarted || !departureStation || !destinationStation){
+          return;
+      }
 
+      const userId = await AsyncStorage.getItem("userId", (uuid) => {console.log(uuid)});
+      setUserId(userId); 
 
-
-  const stopLocation = () => {
-    setTravelStarted(false);
-    TaskManager.isTaskRegisteredAsync(LOCATION_TRACKING)
-      .then((tracking) => {
-          if (tracking) {
-              Location.stopLocationUpdatesAsync(LOCATION_TRACKING);
-          }
+      fetch( `https://rodalinets.upf.edu/travel?fromStation=${departureStation.name}&toStation=${destinationStation.name}&userId=${userId}`,
+        {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      }).then(response => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          throw new Error(`Request failed with status: ${response.status}`);
+        }
       })
-  }
+      .then(data => {
+          //startLocationTracking();
+          setTravelId(data.id);
+          setTravelStarted(true);
+          const timerId = setTimeout(() => {
+            //stopLocation();
+            endTravel();
+          }, 20 * 60 * 1000);
+          setTimerId(timerId);
+      })
+      
+    };
 
-  const startTravel = async () => {
-    if(!isTravelStarted || !departureStation || !destinationStation){
-        return;
-    }
-
-    const userId = await AsyncStorage.getItem("userId", (uuid) => {console.log(uuid)});
-    setUserId(userId); 
-
-    fetch( "https://rodalinets.upf.edu/travel?" + new URLSearchParams({
-      fromStation: departureStation.name,
-      toStation: destinationStation.name,
-      userId: userId
-    }),
+    const endTravel = () => {
+      console.log("cancellling travel", travelId)
+      fetch( "https://rodalinets.upf.edu/travel/" + travelId,
       {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }).then(response => {
-      if (response.status === 200) {
-        return response.json();
-      } else {
-        throw new Error(`Request failed with status: ${response.status}`);
-      }
-    })
-    .then(data => {
-        startLocationTracking();
-        setTravelId(data.id);
-        const timerId = setTimeout(() => {
-          stopLocation();
-          endTravel();
-        }, 20 * 60 * 1000);
-        setTimerId(timerId);
-        globalTravelId = data.id;
-    })
-    
-  };
-
-  const endTravel = () => {
-    fetch( "https://rodalinets.upf.edu/travel/" + globalTravelId,
-    {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify( {
-        endTime: new Date()
-      })
-    }).then(response => {
-      if (response.status === 200) {
-        return response.json();
-      } else {
-        throw new Error(`Request failed with status: ${response.status}`);
-      }
-    }).then(data => {
-        /*
-      if (timerId) {
-        clearTimeout(timerId);
-        setTimerId(null);
-      }
-      */
-      stopLocation();
-    });
-  };
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify( {
+          endTime: new Date()
+        })
+      }).then(response => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          throw new Error(`Request failed with status: ${response.status}`);
+        }
+      }).then(data => {
+        setTravelStarted(false);
+      });
+    };
 
     return (
         <View style={styles.container}>
             <View style={styles.card}>
-
                 <View style={{width: '100%', height: 180, flexDirection: 'row'}}>
                     <View style={{flex: 0.2, display: 'flex', alignContent: 'center', justifyContent: 'center', alignItems: 'center', transform: [{translateY: -10}] }}>
                         <View style={{width: 10, height: 10, backgroundColor: 'white', borderRadius: 999 }}></View>
@@ -167,20 +121,19 @@ const Travel = () => {
                 </View>
                     <Link href={"/"}  
                     style={{ borderRadius: 10, paddingHorizontal: 30, paddingTop: 12, paddingBottom: 10, backgroundColor: Colors.background}} asChild >
-                        <Pressable onPress={() => endTravel()} style={{ borderRadius: 10, paddingHorizontal: 30, paddingTop: 12, paddingBottom: 10, backgroundColor: Colors.background}}>
-                            <Text 
-                            style={{fontFamily: 'Poppins_Bold', color: Colors.text , textAlign: 'center'}}>End travel<AntDesign name="right" /></Text>
+                        <Pressable onPress={isTravelStarted ? () => endTravel() : () => startTravel()} style={{ borderRadius: 10, paddingHorizontal: 30, paddingTop: 12, paddingBottom: 10, backgroundColor: Colors.background, display: 'flex', alignItems: 'center'}}>
+                        <Text 
+                          style={[{fontFamily: 'Poppins_Bold', color: Colors.text},
+                          ]}>{isTravelStarted ? "End Travel" : "Start Travel" }  <AntDesign name="right" />
+                        </Text>
                         </Pressable>
                     </Link>
             </View>
-            {/*
-          <Animated.View style={[{backgroundColor: Colors.gray, overflow: 'hidden', borderBottomLeftRadius: 10, borderBottomRightRadius: 10,}]}>
-              <StationProgress stations={stations} currentStation={{"id":79412, "name":"Cabrera de Mar-Vilassar de Mar","latitude":41.506864,"longitude":2.4013433,"index":13}} />
-          </Animated.View>
-        */}
+  
         </View>
     );
 };
+
 
 export default Travel;
 
@@ -234,41 +187,3 @@ const styles = StyleSheet.create({
     },
 });
 
-
-
-TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
-    if (error) {
-        console.log('LOCATION_TRACKING task ERROR:', error);
-        return;
-    }
-    if (data) {
-        const { locations } = data;
-        let lat = locations[0].coords.latitude;
-        let long = locations[0].coords.longitude;
-  
-        l1 = lat;
-        l2 = long;
-  
-        let location = await Location.getCurrentPositionAsync({});
-         
-        try {
-          fetch("https://rodalinets.upf.edu/location?" + new URLSearchParams({
-            id: globalTravelId,
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude
-          }),
-            {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-          }).then(response => response.json())
-          .then(data => {
-          });
-    
-        } catch (error) {
-          console.log('Error fetching location: ' + error.message);
-        }
-      }
-  });

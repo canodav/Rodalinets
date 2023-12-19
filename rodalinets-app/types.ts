@@ -6,13 +6,16 @@ export type Station = {
     index: number
 }
 
+export type nearestStation = Station & {distance: number}
+
 export type SelectInputProps = {
     data: Array<any>,
     placeholder: string,
     label: string,
     style?: any,
     value: Station | null,
-    onSelect: (station: Station) => void
+    onSelect: (station: Station) => void,
+    nearestStationOption?: boolean
 }
 
 export type TrainArrival = {
@@ -26,4 +29,8 @@ export type TrainArrival = {
     estimated_arrival_time: string
 }
 
-
+export type Location = {
+    latitude: number,
+    longitude: number,
+    timestamp?: string
+}

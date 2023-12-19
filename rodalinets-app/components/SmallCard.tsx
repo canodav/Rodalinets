@@ -11,7 +11,6 @@ type cardProps = {
 }
 
 export const SmallCard = ({id, departure_time, real_departure_time, animationDelay} : cardProps) => {
-    console.log(id);
     return (
         <Animated.View style={styles.container}  entering={FadeInLeft.duration(400).delay(400)}  >
             <Text style={styles.label}>Estimated Departure Time:</Text><Text style={{...styles.text, ...styles.primaryText}}>{real_departure_time}</Text>

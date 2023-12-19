@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Crypto from 'expo-crypto';
+import * as TaskManager from 'expo-task-manager'
 
 import {useStationStore, useStationStoreState} from '@/stores/stationStore'
 import {useTravelStore} from '@/stores/travelStore'
@@ -15,11 +16,17 @@ import {Timetable} from '@/components/Timetable'
 import Colors from '@/constants/Colors';
 import { AntDesign } from '@expo/vector-icons';
 import { ExternalLink } from '@/components/ExternalLink';
+import { AskLocationModal } from '@/components/AskLocationModal';
+import { TravelIndex } from '@/components/TravelIndex'
+import { SpeedModal } from '@/components/SpeedModal';
 
-
+const LOCATION_TRACKING =  'background-location-task';
 
 export default function Home() {
   const [modalVisible, setModalVisible] = useState(false);
+  const [speedModalVisible, setSpeedModalVisible] = useState(false);
+  const [speed, setSpeed] = useState<number | null>(0);
+
 
   const stations =  useStationStore(state => state.stations)
   const fetchStations = useStationStore(state => state.fetchStations);
@@ -31,6 +38,42 @@ export default function Home() {
   const setDestinationStation = useStationStore(state => state.setDestinationStation);
 
   const setTravelStarted = useTravelStore((state) => state.setTravelStarted);
+  const isTravelStarted = useTravelStore((state) => state.isTravelStarted);
+
+
+  const [locationPermissions, setLocationPermissions] = useState({background: false, foreground: false})
+  const [travelIndexText, setTravelIndexText] = useState("");
+
+
+  const startLocationTracking = async () => {
+
+    await Location.startLocationUpdatesAsync(LOCATION_TRACKING, {
+        accuracy: Location.Accuracy.High,
+        timeInterval: 30000,
+        showsBackgroundLocationIndicator: true,
+        distanceInterval: 1,
+        foregroundService: {
+            notificationTitle: 'Using your location',
+            notificationBody: 'To turn off, go back to the app and switch something off.',
+            killServiceOnDestroy: true,
+        },
+    });
+    const hasStarted = await Location.hasStartedLocationUpdatesAsync(
+        LOCATION_TRACKING
+    );
+  };
+
+
+  const stopLocation = () => {
+    setTravelStarted(false);
+    TaskManager.isTaskRegisteredAsync(LOCATION_TRACKING)
+      .then((tracking) => {
+          if (tracking) {
+              Location.stopLocationUpdatesAsync(LOCATION_TRACKING);
+          }
+      })
+  }
+
 
   const generateAndStoreUserId = async () => {
     try {
@@ -50,16 +93,32 @@ export default function Home() {
     fetchStations();
   }, [fetchStations])
 
- 
   useEffect(() => {
     setModalVisible(true);
-
     generateAndStoreUserId();
+    //startLocationTracking();
+    const intervalId = setInterval(() => {
+      checkSpeed();
+    }, 10000); 
+
+    // Clear the interval when the component is unmounted
+    return () => clearInterval(intervalId);
   }, [])
+
+  const checkSpeed = async () => {
+    const location  = await Location.getCurrentPositionAsync({});
+    setSpeed(location.coords.speed);
+    console.log("these are the locations", location);
+  }
 
   const requestLocationPermission = async () => {
     let resf = await Location.requestForegroundPermissionsAsync();
     let resb = await Location.requestBackgroundPermissionsAsync();
+
+    if(resb.status !== 'granted' || resf.status !== 'granted') {
+      setModalVisible(true);
+    }
+    setLocationPermissions({background: resb.status === 'granted', foreground: resf.status === 'granted'} )
     if (resf.status !== 'granted' && resb.status !== 'granted') {
       console.log('Permission to access location was denied');
     } else {
@@ -68,65 +127,92 @@ export default function Home() {
   };
 
 
+
+
   return (
     <>
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        setModalVisible(!modalVisible);
-      }}
-    >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>We need your background location permission to provide real-time travel updates and route tracking, even when the app is not in the foreground.
-          {"\n"}
-          {"\n"}
-          Please note that all information collected is <Text style={{fontWeight: 'bold'}}>anonymous</Text> and solely used for improving your travel experience.</Text>
-          <View style={{flexDirection: 'row', gap: 10}}>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => {
-                setModalVisible(!modalVisible);
-                requestLocationPermission();
-              }}
-            >
-              <Text style={styles.textStyle}>Understood</Text>
-            </Pressable>
-            <ExternalLink href="https://rodalinets.upf.edu/" asChild   style={[styles.button, styles.buttonOpen]}>
-              <Pressable>
-                <Text style={[styles.textStyle, {color: Colors.text}]}>More information</Text>
-              </Pressable>
-            </ExternalLink>
+      { 
+      (locationPermissions.background && locationPermissions.foreground) ? 
+        <>
+          <View style={styles.container}>
+            <View style={styles.selectInputContainer}>
+              <SelectInput value={departureStation} onSelect={setDepartureStation} style={{zIndex: 10, elevation: 10}} data={stations} placeholder='Select a departure station' label='Departure station' nearestStationOption={true}/>
+              <SelectInput value={destinationStation} onSelect={setDestinationStation} style={{zIndex: 8, elevation: 8}} data={stations} placeholder='Select a destination station' label='Destination station' />
+            </View>
+            <Timetable />
           </View>
-        </View>
-      </View>
-    </Modal>
-    <View style={styles.container}>
-      <View style={styles.selectInputContainer}>
-        <SelectInput value={departureStation} onSelect={setDepartureStation} style={{zIndex: 10, elevation: 10}} data={stations} placeholder='Select a departure station' label='Departure station' />
-        <SelectInput value={destinationStation} onSelect={setDestinationStation} style={{zIndex: 8, elevation: 8}} data={stations} placeholder='Select a destination station' label='Destination station' />
-      </View>
-      <Timetable />
-    </View>
-    <View style={{ flex: 0.10,  elevation: 10, height: 30, backgroundColor: 'white', zIndex: 99 , display: 'flex', width: '100%', alignItems: 'flex-end', justifyContent: 'center', paddingHorizontal: 20 }}>
-        <Link href={"/travel"}  
-          style={[{ borderRadius: 10, paddingHorizontal: 30, paddingTop: 12, paddingBottom: 10},
-          (!departureStation || !destinationStation) ? {backgroundColor: Colors.gray} : {backgroundColor: Colors.tint}
-          ]
-        } asChild>
-            <Pressable disabled={ (departureStation && destinationStation)  ? false :  true} onPress={() => setTravelStarted(true)}>
-                <Text 
-                style={[{fontFamily: 'Poppins_Bold'},
-                  (!departureStation || !destinationStation) ? {color: Colors.text} : {color: 'white'}
-                ]}>Start Travel <AntDesign name="right" /></Text>
-            </Pressable>
-        </Link>
-      </View>
+          <TravelIndex text={travelIndexText}></TravelIndex>
+          <SpeedModal modalVisible={speedModalVisible} setModalVisible={setSpeedModalVisible} onPressAction={()=> console.log("aaaa")}>
+            <Text>Este es el modal {speed}</Text>
+          </SpeedModal>
+
+        </>
+      :
+      <AskLocationModal modalVisible={modalVisible} setModalVisible={setModalVisible} onPressAction={requestLocationPermission} />
+      }
     </>
   );
 }
+
+
+TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
+  if (error) {
+    console.log('LOCATION_TRACKING task ERROR:', error);
+    return;
+  }
+  if (data) {
+      const { locations } = data;
+      console.log(locations);
+      let latitude = locations[0].coords.latitude;
+      let longitude = locations[0].coords.longitude;
+  
+      //let location = await Location.getCurrentPositionAsync({});
+      try {
+        const travelId = await AsyncStorage.getItem('travelId');
+        let isTravelStartedString = await AsyncStorage.getItem('isTravelStarted');
+        const isTravelStarted = (isTravelStartedString == "true");
+
+        console.log({isTravelStarted});
+        if(!isTravelStarted){
+          console.log("just checking speed", locations[0].coords.speed)
+          fetch(`https://rodalinets.upf.edu/notification`,
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({message: `just checking speed ${locations[0].coords.speed}`})
+          });
+        }else{
+          console.log("now im checking coords and sending to the server")
+          fetch(`https://rodalinets.upf.edu/notification`,
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({message: "now im checking coords and sending to the server"})
+          });
+          /*
+          fetch(`https://rodalinets.upf.edu/location?id=${travelId}&latitude=${latitude}&longitude=${longitude}`,
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          }).then(response => response.json())
+          .then(data => {
+          });*/
+        }
+      } catch (error) {
+        console.log('Error fetching location: ' + error.message);
+      }
+    }
+});
+
 
 const styles = StyleSheet.create({
   container: {
@@ -160,46 +246,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 22
   },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 20,
-    paddingVertical: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-        width: 0,
-        height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  button: {
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 12,
-    elevation: 2,
-    flex: 1,
-    
-  },
-  buttonOpen: {
-    backgroundColor: Colors.background,
-  },
-  buttonClose: {
-    backgroundColor: Colors.tint,
-
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  modalText: {
-    marginBottom: 15,
-    fontSize: 18,
-
-    textAlign: "center"
-  }
 });

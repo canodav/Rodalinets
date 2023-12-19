@@ -41,37 +41,25 @@ export const Card = ({id, departure_time, real_departure_time, animationDelay} :
         };
     });
 
-    const arrowAnimatedStyle = useAnimatedStyle(() => {
-        const rotation = `${animationHeight.value * 180}deg`; 
-        return {
-            transform: [{ rotateZ: withTiming(rotation, { duration: 300 }) }],
-        };
-    });
+
 
     return (
         <Animated.View entering={FadeInLeft.duration(400).delay(200)}  >
-            {/*<Link href={`/trainarrival/${id}`} style={{height: '100%', flex: 1}} asChild>*/}
+            <Link href={`/trainarrival/${id}`} style={{height: '100%', flex: 1}} asChild>
                 <Pressable>
                     <View style={styles.container}  >
                         <View>
-                            <Animated.View sharedTransitionTag='sharedTag'>
+                            <View >
                                 <Text style={styles.label}>Estimated Departure Time:</Text><Text style={{...styles.text, ...styles.primaryText}}>{real_departure_time}</Text>
-                            </Animated.View>
-                            <Animated.View  sharedTransitionTag='sharedTag'>
+                            </View>
+                            <View >
                                 <Text style={{...styles.label, fontSize: 14} }>Scheduled Time:</Text><Text style={{...styles.text, ...styles.secondaryText}}>{departure_time}</Text>
-                            </Animated.View>
+                            </View>
                         </View>
-                        <TouchableOpacity onPress={toggleCard} style={{justifyContent: 'flex-end', height: '100%'}}>
-                            <Animated.View style={arrowAnimatedStyle}>
-                                <AntDesign name="down" size={40} color="white" />
-                            </Animated.View>
-                        </TouchableOpacity>
+                        <AntDesign style={{alignSelf: 'flex-end'}} name="plus" size={40} color="white" />
                     </View>
                 </Pressable>
-            {/*</Link>*/}
-            <Animated.View style={[{backgroundColor: Colors.gray, overflow: 'hidden', borderBottomLeftRadius: 10, borderBottomRightRadius: 10,}, heightAnimatedStyle]}>
-                <StationProgress stations={stations} currentStation={departureStation} />
-            </Animated.View>
+            </Link>
         </Animated.View>
     )
 }

@@ -12,6 +12,7 @@ import { View, Text } from "@/components/Themed";
 import { Header } from "@/components/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "@/constants/Colors";
+import { EventProvider } from 'react-native-outside-press';
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -57,6 +58,7 @@ function RootLayoutNav() {
     const colorScheme = useColorScheme();
 
     return (
+        <EventProvider>
         <Stack>
             <Stack.Screen
                 name="index"
@@ -77,11 +79,13 @@ function RootLayoutNav() {
             <Stack.Screen
                 name="travel"
                 options={{
-                    presentation: 'containedModal',
+                    animation: 'slide_from_bottom',
+                    animationDuration: 0.01,
                     headerShown: true,
                     headerStyle: {
                         backgroundColor: Colors.background,
                     },
+                    headerBackVisible: false,
                     headerShadowVisible: false,
                     headerTitleAlign: 'center',
                     headerTitle: (props) => (
@@ -94,20 +98,22 @@ function RootLayoutNav() {
                <Stack.Screen
                 name="trainarrival"
                 options={{
-                    presentation: 'containedModal',
-                    headerShown: true,
+                    presentation: 'transparentModal',
+                    headerShown: false,
+
                     headerStyle: {
                         backgroundColor: Colors.background,
                     },
                     headerShadowVisible: false,
                     headerTitleAlign: 'center',
                     headerTitle: (props) => (
-                        <Text style={{ fontFamily: "Poppins_Black", fontSize: 30, lineHeight: 70 }}>
+                        <Text style={{ fontFamily: "Poppins_Black", fontSize: 30, lineHeight: 50 }}>
                             RODALI<Text style={{color: Colors.tint}}>NETS</Text>
                         </Text>
                     ),
                 }}
             />
         </Stack>
+        </EventProvider>
     );
 }

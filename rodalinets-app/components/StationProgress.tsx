@@ -17,7 +17,8 @@ export const StationProgress = ({
     currentStation,
 }: StationProgressProps) => {
     const [trainPosition, setTrainPosition] = useState(null);
-    const [trainPositionPercentage, setTrainPositionPercentage] = useState(30);
+    const [trainPositionPercentages, setTrainPositionPercentages] = useState([10, 50, 80]);
+    const [currentTrain, setCurrentTrain ] = useState(1);
 
     function calculateTrainPositionPercentage(trainCoords: coords, stations) {
         const distance = (coord1, coord2) => {
@@ -74,7 +75,7 @@ export const StationProgress = ({
                 trainPosition,
                 stations
             );
-            setTrainPositionPercentage(percentage);
+            setTrainPositionPercentages(percentage);
         }
     }, [trainPosition, stations]);
 
@@ -125,7 +126,6 @@ export const StationProgress = ({
     return (
         <View style={styles.stationContainer}>
             <View style={styles.container}>
-                {/* Line representing the path */}
                 <View style={styles.line} />
                 {stations.map((station, index) => (
                     <View
@@ -138,13 +138,19 @@ export const StationProgress = ({
                     >
                         <Text style={styles.stationLabel}>{station.name}</Text>
                     </View>
+                ))
+                }
+
+                {
+                trainPositionPercentages.map((train, index) => (
+                    <View key={train}
+                        style={[
+                            styles.train,
+                            { left: `${train}%` ,
+                            backgroundColor: (index == currentTrain) ? Colors.tint : "#999999",},
+                        ]}
+                    />
                 ))}
-                <View
-                    style={[
-                        styles.train,
-                        { left: `${trainPositionPercentage}%` },
-                    ]}
-                />
             </View>
         </View>
     );
@@ -153,26 +159,31 @@ export const StationProgress = ({
 const styles = StyleSheet.create({
     stationContainer: {
         alignItems: "center",
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 10
         //transform: [{ translateX: -3 }],
     },
     container: {
         flexDirection: "row",
         alignItems: "center",
-        height: 100,
+        height: 150,
         width: "90%",
         position: "relative",
+        backgroundColor: 'white',
+        borderRadius: 10,
 
     },
     line: {
         position: "absolute",
-        top: "50%",
+        top: "80%",
         width: "100%",
         height: 5,
         backgroundColor: "black",
     },
     station: {
         position: "absolute",
-        bottom: "50%",
+        bottom: "20%",
         width: 5,
         height: 16,
         backgroundColor: "black",
@@ -180,7 +191,7 @@ const styles = StyleSheet.create({
     },
     stationLabel: {
         position: "absolute",
-        bottom: 60,
+        bottom: 70,
         width: 100, 
         textAlign: "left",
         
@@ -196,7 +207,7 @@ const styles = StyleSheet.create({
     },
     train: {
         position: "absolute",
-        bottom: "50%",
+        bottom: "20%",
         width: 15,
         height: 15,
         borderRadius: 10,

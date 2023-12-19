@@ -11,9 +11,13 @@ import {
     ScrollView,
     GestureHandlerRootView,
 } from "react-native-gesture-handler";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, AntDesign} from "@expo/vector-icons";
+import { useRouter } from "expo-router"
 import { Station, SelectInputProps } from "@/types";
-import {useStationStore, useStationStoreState} from '@/stores/stationStore'
+import {useStationStore} from '@/stores/stationStore'
+
+import NearestStationOption from "@/components/NearestStationOption";
+import OutsidePressHandler from "react-native-outside-press";
 
 
 export const SelectInput = ({
@@ -22,10 +26,17 @@ export const SelectInput = ({
     label,
     style,
     onSelect,
-    value
+    value,
+    nearestStationOption = false
 }: SelectInputProps) => {
+
+    const nearestStation = useStationStore( state => state. nearestStation);
+
     const [selectedItem, setSelectedItem] = useState<Station | null>(null);
     const [isListVisible, setIsListVisible] = useState(false);
+
+  const router = useRouter();
+
 
     // Scroll to selected item
     const scrollViewRef = useRef<ScrollView | null>(null);
@@ -67,6 +78,12 @@ export const SelectInput = ({
         }, 0);
     };
     
+    useEffect(() => {
+        if(nearestStationOption && nearestStation) {
+            setSelectedItem(data.filter(station => station.id === nearestStation.id)[0]);
+        }
+    }, [nearestStation])
+
     const handleSelectItem = (name: any) => {
         const selected = data.find((item) => item.name == name);
         if (selected) setSelectedItem(selected);
@@ -74,18 +91,14 @@ export const SelectInput = ({
         onSelect(selected)
     };
 
-    const handleClickOutside = () => {
-        console.log("clicked outside")
-    }
-
     return (
-        <TouchableWithoutFeedback onPress={handleClickOutside} style={{  position: 'absolute', backgroundColor: 'red', flex: 1, width: '100%', height: '100%'}}>
+        <OutsidePressHandler style={{...style, shadowOpacity: 0}} onOutsidePress={closeDropdown} >
             <View
                 style={{
-                    ...style,
                     position: "relative",
                     width: "100%",
                     elevation: 0,
+                    shadowOpacity: 0
                 }}
             >
                 <Pressable
@@ -99,6 +112,8 @@ export const SelectInput = ({
                         flexDirection: "row",
                         elevation: 0,
                         zIndex: 0,
+                        shadowOpacity: 0,
+                        
                     }}
                 >
                     {selectedItem ? (
@@ -113,7 +128,7 @@ export const SelectInput = ({
                             </Text>
                         </View>
                     )}
-                    <MaterialCommunityIcons name="pencil" size={20} color="#999" />
+                    <AntDesign name="down" size={20} color="#999" />
                 </Pressable>
                 {isListVisible && (
                     <GestureHandlerRootView
@@ -128,6 +143,10 @@ export const SelectInput = ({
                             borderRadius: 10,
                         }}
                     >
+                    {nearestStationOption && 
+                        <NearestStationOption />
+                    }
+
                     <ScrollView ref={scrollViewRef} >
                             {
                                 data.map((item, index) => {
@@ -149,7 +168,7 @@ export const SelectInput = ({
                     </GestureHandlerRootView>
                 )}
             </View>
-        </TouchableWithoutFeedback>
+        </OutsidePressHandler>
     );
 };
 

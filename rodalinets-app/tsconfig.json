@@ -12,5 +12,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "../(tabs)/travel.tsx"  ]
+, "../(tabs)/travel.tsx", "components/__tests__/Card.test.js"  ]
 }
