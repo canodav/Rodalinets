@@ -19,6 +19,7 @@ import { ExternalLink } from '@/components/ExternalLink';
 import { AskLocationModal } from '@/components/AskLocationModal';
 import { TravelIndex } from '@/components/TravelIndex'
 import { SpeedModal } from '@/components/SpeedModal';
+import { StationsSelector } from '@/components/StationsSelector'
 
 const LOCATION_TRACKING =  'background-location-task';
 
@@ -28,8 +29,7 @@ export default function Home() {
   const [speed, setSpeed] = useState<number | null>(0);
 
 
-  const stations =  useStationStore(state => state.stations)
-  const fetchStations = useStationStore(state => state.fetchStations);
+
 
   const departureStation = useStationStore(state => state.departureStation);
   const destinationStation = useStationStore(state => state.destinationStation);
@@ -89,9 +89,7 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    fetchStations();
-  }, [fetchStations])
+
 
   useEffect(() => {
     setModalVisible(true);
@@ -135,17 +133,13 @@ export default function Home() {
       (locationPermissions.background && locationPermissions.foreground) ? 
         <>
           <View style={styles.container}>
-            <View style={styles.selectInputContainer}>
-              <SelectInput value={departureStation} onSelect={setDepartureStation} style={{zIndex: 10, elevation: 10}} data={stations} placeholder='Select a departure station' label='Departure station' nearestStationOption={true}/>
-              <SelectInput value={destinationStation} onSelect={setDestinationStation} style={{zIndex: 8, elevation: 8}} data={stations} placeholder='Select a destination station' label='Destination station' />
-            </View>
+              <StationsSelector></StationsSelector>
             <Timetable />
           </View>
           <TravelIndex text={travelIndexText}></TravelIndex>
           <SpeedModal modalVisible={speedModalVisible} setModalVisible={setSpeedModalVisible} onPressAction={()=> console.log("aaaa")}>
             <Text>Este es el modal {speed}</Text>
           </SpeedModal>
-
         </>
       :
       <AskLocationModal modalVisible={modalVisible} setModalVisible={setModalVisible} onPressAction={requestLocationPermission} />
@@ -227,12 +221,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background
   },
 
-  selectInputContainer:{
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 10,
-    width: '100%',
-  },
+
  
   separator: {
     marginVertical: 30,

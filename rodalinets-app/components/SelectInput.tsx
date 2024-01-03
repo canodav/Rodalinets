@@ -6,6 +6,7 @@ import {
     Text,
     TouchableWithoutFeedback,
     FlatList,
+    PixelRatio
 } from "react-native";
 import {
     ScrollView,
@@ -19,6 +20,8 @@ import {useStationStore} from '@/stores/stationStore'
 import NearestStationOption from "@/components/NearestStationOption";
 import OutsidePressHandler from "react-native-outside-press";
 
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size : any) => size / fontScale;
 
 export const SelectInput = ({
     data,
@@ -34,8 +37,6 @@ export const SelectInput = ({
 
     const [selectedItem, setSelectedItem] = useState<Station | null>(null);
     const [isListVisible, setIsListVisible] = useState(false);
-
-  const router = useRouter();
 
 
     // Scroll to selected item
@@ -67,6 +68,15 @@ export const SelectInput = ({
         }
     }, [])
 
+    useEffect(() => {
+        if (value) {
+            const selected = data.find(station => station.id === value.id);
+            if (selected) {
+                setSelectedItem(selected);
+            }
+        }
+    }, [value, data]);
+
     const closeDropdown = () => {
         setIsListVisible(false);
     };
@@ -89,6 +99,10 @@ export const SelectInput = ({
         if (selected) setSelectedItem(selected);
         setIsListVisible(false);
         onSelect(selected)
+    };
+
+    const clearSelection = () => {
+        setSelectedItem(null);
     };
 
     return (
@@ -128,7 +142,13 @@ export const SelectInput = ({
                             </Text>
                         </View>
                     )}
-                    <AntDesign name="down" size={20} color="#999" />
+                    {selectedItem ?
+                        <Pressable onPress={clearSelection}>
+                            <AntDesign name="close" size={20} color="#999" />
+                        </Pressable>
+                        : 
+                        <AntDesign name="down" size={20} color="#999" />
+                    }
                 </Pressable>
                 {isListVisible && (
                     <GestureHandlerRootView
@@ -176,23 +196,23 @@ const styles = StyleSheet.create({
     textContainer: {
         width: "90%",
         backgroundColor: "#e9e9e9",
-        height: 40,
+        height: 32,
         borderRadius: 8,
         flexDirection: "row",
         alignItems: "center",
     },
     placeholderText: {
         color: "#999",
-        fontSize: 14,
-        lineHeight: 20,
+        fontSize: getFontSize(12),
+        lineHeight: getFontSize(20),
     },
     labelText: {
-        fontSize: 14,
-        lineHeight: 20,
+        fontSize: getFontSize(12),
+        lineHeight: getFontSize(20),
     },
     spanText: {
-        fontSize: 14,
-        lineHeight: 20,
+        fontSize: getFontSize(12),
+        lineHeight: getFontSize(20),
         fontWeight: "bold",
     },
 });

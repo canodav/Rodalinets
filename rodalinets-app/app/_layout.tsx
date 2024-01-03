@@ -7,7 +7,7 @@ import {
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { useColorScheme } from "react-native";
+import { useColorScheme, PixelRatio } from "react-native";
 import { View, Text } from "@/components/Themed";
 import { Header } from "@/components/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -24,13 +24,16 @@ export const unstable_settings = {
     initialRouteName: "(tabs)",
 };
 
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size : any) => size / fontScale;
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
     const [loaded, error] = useFonts({
         Poppins_Regular: require("../assets/fonts/Poppins-Regular.ttf"),
-        Poppins_Bold: require("../assets/fonts/Poppins-Bold.ttf"),
+        Poppins_Bold: require("../assets/fonts/Poppins-SemiBold.ttf"),
         Poppins_Black: require("../assets/fonts/Poppins-Black.ttf"),
 
         ...FontAwesome.font,
@@ -70,7 +73,7 @@ function RootLayoutNav() {
                     headerShadowVisible: false,
                     headerTitleAlign: 'center',
                     headerTitle: (props) => (
-                        <Text style={{ fontFamily: "Poppins_Black", fontSize: 30, lineHeight: 50 }}>
+                        <Text style={{ fontFamily: "Poppins_Black",  fontSize: getFontSize(30), lineHeight: getFontSize(40)}}>
                             RODALI<Text style={{color: Colors.tint}}>NETS</Text>
                         </Text>
                     ),
@@ -89,7 +92,7 @@ function RootLayoutNav() {
                     headerShadowVisible: false,
                     headerTitleAlign: 'center',
                     headerTitle: (props) => (
-                        <Text style={{ fontFamily: "Poppins_Black", fontSize: 30, lineHeight: 50 }}>
+                        <Text style={{ fontFamily: "Poppins_Black", fontSize: getFontSize(30), lineHeight: getFontSize(40) }}>
                             RODALI<Text style={{color: Colors.tint}}>NETS</Text>
                         </Text>
                     ),
@@ -107,7 +110,7 @@ function RootLayoutNav() {
                     headerShadowVisible: false,
                     headerTitleAlign: 'center',
                     headerTitle: (props) => (
-                        <Text style={{ fontFamily: "Poppins_Black", fontSize: 30, lineHeight: 50 }}>
+                        <Text style={{ fontFamily: "Poppins_Black", fontSize: getFontSize(30), lineHeight: getFontSize(40) }}>
                             RODALI<Text style={{color: Colors.tint}}>NETS</Text>
                         </Text>
                     ),

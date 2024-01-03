@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         paddingHorizontal: 20,
         backgroundColor: Colors.gray,
-        height: 150,
+        height: 120,
         gap: 0
     },
     smallCard: {
