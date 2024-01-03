@@ -2,6 +2,8 @@ import Colors from '@/constants/Colors'
 import { Text, View, StyleSheet } from 'react-native'
 import Animated, { FadeInLeft } from 'react-native-reanimated';
 import { Link } from 'expo-router';
+import { PixelRatio } from 'react-native';
+
 
 type cardProps = {
     departure_time : string
@@ -9,6 +11,9 @@ type cardProps = {
     animationDelay?: number,
     id: number,
 }
+const fontScale = PixelRatio.getFontScale();
+const getFontSize = (size : any) => size / fontScale;
+
 
 export const SmallCard = ({id, departure_time, real_departure_time, animationDelay} : cardProps) => {
     return (
@@ -38,18 +43,19 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins_Bold',
     },
     primaryText:{
-        fontSize: 34,
-        lineHeight: 38,
+        fontSize: getFontSize(28),
+        lineHeight: getFontSize(32),
     },
     secondaryText:{
-        fontSize: 20,
-        lineHeight: 26
+        fontSize: getFontSize(20),
+        lineHeight: getFontSize(24)
     },
     label: {
         color: Colors.text,
-        fontSize: 16,
-        lineHeight: 20,
+        fontSize: getFontSize(16),
+        lineHeight: getFontSize(20),
         fontFamily:'Poppins_Bold',
         textTransform: "uppercase"
     }
 })
+

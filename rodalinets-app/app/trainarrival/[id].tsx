@@ -31,7 +31,7 @@ const details = () => {
             router.back()
           }}
         >
-          <Animated.View style={styles.card}  entering={FadeInDown.delay(100).duration(300)}>
+          <Animated.View style={styles.card} entering={FadeInDown.delay(100).duration(300)}>
             <View style={{flexDirection: 'row', justifyContent:'space-between', alignContent: 'center', alignItems: 'center',  width: '100%'}}>
               <View style={{flexDirection: 'column', flex: 0.4}}>
                 <Text style={[styles.label]}>Departure Time:</Text><Text style={[styles.text]}>{trainArrival.real_departure_time}</Text>
