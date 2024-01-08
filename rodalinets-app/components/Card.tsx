@@ -15,16 +15,17 @@ import { PixelRatio } from 'react-native';
 
 type cardProps = {
     departure_time : string
-    real_departure_time: string,
+    estimated_departure_time: string,
     animationDelay?: number,
     id: number,
-    principal: boolean
+    principal: boolean,
+    style?: Record<string, number | string> | Array<Record<string, number | string>>
 }
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size : any) => size / fontScale;
 
-export const Card = ({id, departure_time, real_departure_time, principal, animationDelay} : cardProps) => {
+export const Card = ({id, departure_time, estimated_departure_time, principal, animationDelay, style} : cardProps) => {
     const [expanded, setExpanded] = useState<boolean>(false)
     const animationHeight = useSharedValue(0);
     const arrowAnimation = useSharedValue(0);
@@ -53,12 +54,12 @@ export const Card = ({id, departure_time, real_departure_time, principal, animat
 
     return (
         <Animated.View entering={FadeInLeft.duration(400).delay(200)}  >
-            <Link href={`/trainarrival/${id}`} style={{height: '100%', flex: 1}} asChild>
+            <Link href={`/trainarrival/${id}`} style={[style, {height: '100%', flex: 1}]} asChild>
                 <Pressable>
                     <View style={ principal ? styles.container : styles.whiteContainer} >
                         <View>
                             <View >
-                                <Text style={[styles.label, principal ? null : styles.darkLabel]}>Estimated Departure Time:</Text><Text style={[principal ? styles.text : styles.darkText , styles.primaryText]}>{real_departure_time}</Text>
+                                <Text style={[styles.label, principal ? null : styles.darkLabel]}>Estimated Departure Time:</Text><Text style={[principal ? styles.text : styles.darkText , styles.primaryText]}>{estimated_departure_time}</Text>
                             </View>
                             <View >
                                 <Text style={[styles.label, principal ? null : styles.darkLabel] }>Scheduled Time:</Text><Text style={[principal ? styles.text : styles.darkText , styles.secondaryText]}>{departure_time}</Text>
@@ -83,7 +84,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         elevation: 2,
         flexDirection: 'row',    
-        justifyContent: 'space-between'    
+        justifyContent: 'space-between',
+        zIndex: 2,
     },
     whiteContainer: {
         width: '100%',

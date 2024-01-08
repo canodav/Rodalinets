@@ -34,7 +34,7 @@ const details = () => {
           <Animated.View style={styles.card} entering={FadeInDown.delay(100).duration(300)}>
             <View style={{flexDirection: 'row', justifyContent:'space-between', alignContent: 'center', alignItems: 'center',  width: '100%'}}>
               <View style={{flexDirection: 'column', flex: 0.4}}>
-                <Text style={[styles.label]}>Departure Time:</Text><Text style={[styles.text]}>{trainArrival.real_departure_time}</Text>
+                <Text style={[styles.label]}>Departure Time:</Text><Text style={[styles.text]}>{trainArrival.estimated_departure_time}</Text>
               </View>
               <View style={{flex: 0.2, alignItems: 'center'}}>
               <FontAwesome5 name="long-arrow-alt-right" size={24} color={Colors.background} />

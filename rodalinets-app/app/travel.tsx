@@ -104,7 +104,7 @@ const Travel = () => {
 
                             <Text style={[styles.label]}>Departure Time:</Text>
                             <Text style={[styles.text]}>
-                                {trainArrival.real_departure_time}
+                                {trainArrival.estimated_departure_time}
                             </Text>
                         </View>
                         <View style={{ flexDirection: "column",  flex: 0.5 }}>

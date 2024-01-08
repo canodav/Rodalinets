@@ -9,7 +9,7 @@ describe('<Card />', () => {
     const mockProps = {
         id: 1,
         departure_time: '08:00',
-        real_departure_time: '08:05',
+        estimated_departure_time: '08:05',
         animationDelay: 100,
     };
 
