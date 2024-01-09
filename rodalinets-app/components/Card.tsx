@@ -7,6 +7,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { StationProgress } from '@/components/StationProgress';
 import Colors from '@/constants/Colors'
+import { Fonts , LineHeights } from '@/constants/Fonts'
+
 import { useStationStore } from '@/stores/stationStore';
 
 import { PixelRatio } from 'react-native';
@@ -65,7 +67,6 @@ export const Card = ({id, departure_time, estimated_departure_time, principal, a
                                 <Text style={[styles.label, principal ? null : styles.darkLabel] }>Scheduled Time:</Text><Text style={[principal ? styles.text : styles.darkText , styles.secondaryText]}>{departure_time}</Text>
                             </View>
                         </View>
-                        <AntDesign style={{alignSelf: 'flex-end'}} name="plus" size={40} color="white" />
                     </View>
                 </Pressable>
             </Link>
@@ -110,17 +111,17 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins_Bold',
     },
     primaryText:{
-        fontSize: getFontSize(24),
-        lineHeight: getFontSize(28),
+        fontSize: Fonts.xl3,
+        lineHeight: LineHeights.xl3,
     },
     secondaryText:{
-        fontSize: getFontSize(18),
-        lineHeight: getFontSize(22)
+        fontSize: Fonts.xl,
+        lineHeight: LineHeights.xl
     },
     label: {
         color: Colors.background,
-        fontSize: getFontSize(14),
-        lineHeight: getFontSize(18),
+        fontSize:Fonts.base,
+        lineHeight: LineHeights.base,
         fontFamily:'Poppins_Bold',
         textTransform: "uppercase"
     },

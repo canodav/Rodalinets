@@ -4,6 +4,8 @@ import Animated from 'react-native-reanimated';
 
 import { Card } from '@/components/Card';
 import Colors from '@/constants/Colors';
+import { Fonts , LineHeights } from '@/constants/Fonts';
+
 import { TrainArrival } from '@/types';
 
 import { useStationStore } from '@/stores/stationStore';
@@ -12,6 +14,8 @@ import { useTimetableStore } from '@/stores/timetableStore';
 import { SmallCard } from './SmallCard';
 import { TimetableSkeleton } from './TimetableSkeleton';
 import { ScrollView, GestureHandlerRootView } from 'react-native-gesture-handler';
+
+
 
 const fontScale = PixelRatio.getFontScale();
 const getFontSize = (size: any) => size / fontScale;
@@ -47,55 +51,29 @@ export const Timetable = () => {
   useEffect(() => {
     if (departureStation && destinationStation) {
       fetchTimetables();
+      scrollViewRef?.current?.scrollTo({ y: 215 })
     }
   }, [departureStation, destinationStation]);
 
-  useEffect(() => {
-    scrollViewRef?.current?.scrollTo({ y: 240 });
-  }, []);
-
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onLayout={() =>  scrollViewRef?.current?.scrollTo({ y: 215 })}  >
       <Animated.View style={styles.titleContainer}>
         <Text style={styles.title}>
           {departureStation && departureStation.name} - {destinationStation && destinationStation.name}
         </Text>
       </Animated.View>
       <View>
-        <Text style={{ fontSize: getFontSize(12), lineHeight: getFontSize(12) }}>Last update: {lastUpdateTime}</Text>
+        <Text style={{ fontSize: Fonts.sm, lineHeight: Fonts.sm }}>Last update: {lastUpdateTime}</Text>
       </View>
       {isLoading ? (
         <ActivityIndicator size="large" color={Colors.tint} />
       ) : departureStation && destinationStation && timetable?.length ? (
         <GestureHandlerRootView style={{ height: '100%' }}>
-          <ScrollView style={{ height: '100%' }} ref={scrollViewRef}>
+          <ScrollView style={{ height: '100%' }} ref={scrollViewRef} fadingEdgeLength={100}>
             {timetable.map((item, index) => (
-              <Card style={[{ marginBottom: 12 }, index == 4 ? { marginBottom: 300 } : {}]} departure_time={item.departure_time} estimated_departure_time={item.estimated_departure_time} key={item.id} id={item.id} principal={index == 2 ? true : false} animationDelay={200 + 0 * 100} />
+              <Card style={[{ marginBottom: 12 }, index == 4 ? { marginBottom: 180 } : {}]} departure_time={item.departure_time} estimated_departure_time={item.estimated_departure_time} key={item.id} id={item.id} principal={index == 2 ? true : false} animationDelay={200 + 0 * 100} />
             ))}
           </ScrollView>
-          {/*
-                        <FlatList 
-                            data={timetable}
-                            keyExtractor={item => item.id.toString()}
-                            renderItem={({ item, index }) => (
-                                <Card 
-                                    departure_time={item.departure_time} 
-                                    estimated_departure_time={item.estimated_departure_time} 
-                                    key={item.id} 
-                                    id={item.id}
-                                    principal={(index == 2) ? true : false}
-                                    animationDelay={200 + 0 * 100} 
-                                /> 
-                            )}
-                            refreshControl={
-                                <RefreshControl
-                                    refreshing={refreshing}
-                                    onRefresh={onRefresh}
-                                />
-                            }
-                            ItemSeparatorComponent={() => <View style={{height: 10}}></View>}
-                        />
-                        */}
         </GestureHandlerRootView>
       ) : (
         <TimetableSkeleton></TimetableSkeleton>
@@ -123,7 +101,8 @@ const styles = StyleSheet.create({
     alignContent: 'flex-start',
   },
   title: {
-    fontSize: getFontSize(14),
+    fontSize:Fonts.base,
+    lineHeight: LineHeights.base,
     fontFamily: 'Poppins_Bold',
   },
 });

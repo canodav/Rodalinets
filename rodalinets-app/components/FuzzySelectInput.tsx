@@ -10,11 +10,9 @@ import NearestStationOption from '@/components/NearestStationOption';
 import OutsidePressHandler from 'react-native-outside-press';
 
 import Fuse from 'fuse.js';
+import { Fonts, LineHeights } from '@/constants/Fonts';
 
-const fontScale = PixelRatio.getFontScale();
-const getFontSize = (size: any) => size / fontScale;
-
-export const FuzzySelectInput = ({ data, placeholder, label, style, onSelect, nearestStationOption = false }: SelectInputProps) => {
+export const FuzzySelectInput = ({ data, placeholder, label, style, onSelect, nearestStationOption = false, value }: SelectInputProps) => {
   const nearestStation = useStationStore((state) => state.nearestStation);
 
   const [selectedItem, setSelectedItem] = useState<Station | null>(null);
@@ -48,6 +46,17 @@ export const FuzzySelectInput = ({ data, placeholder, label, style, onSelect, ne
   useEffect(() => {
     setStations(data);
   }, [data]);
+
+  useEffect(() => {
+    if (value) {
+      setSelectedItem(value);
+      setSearchString(value.name);
+    } else {
+      setSelectedItem(null);
+      setSearchString('');
+    }
+  }, [value]);
+
 
   const closeDropdown = () => {
     setIsListVisible(false);
@@ -161,16 +170,16 @@ const styles = StyleSheet.create({
   },
   placeholderText: {
     color: '#999',
-    fontSize: getFontSize(12),
-    lineHeight: getFontSize(20),
+    fontSize: Fonts.sm,
+    lineHeight: LineHeights.sm,
   },
   labelText: {
-    fontSize: getFontSize(12),
-    lineHeight: getFontSize(20),
+    fontSize: Fonts.sm,
+    lineHeight: LineHeights.sm,
   },
   spanText: {
-    fontSize: getFontSize(12),
-    lineHeight: getFontSize(20),
+    fontSize: Fonts.sm,
+    lineHeight: LineHeights.sm,
     fontWeight: 'bold',
   },
 });

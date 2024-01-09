@@ -1,4 +1,5 @@
 import Colors from '@/constants/Colors'
+import { Fonts , LineHeights } from '@/constants/Fonts';
 import { Text, View, StyleSheet } from 'react-native'
 import Animated, { FadeInLeft } from 'react-native-reanimated';
 import { Link } from 'expo-router';
@@ -11,15 +12,12 @@ type cardProps = {
     animationDelay?: number,
     id: number,
 }
-const fontScale = PixelRatio.getFontScale();
-const getFontSize = (size : any) => size / fontScale;
-
 
 export const SmallCard = ({id, departure_time, estimated_departure_time, animationDelay} : cardProps) => {
     return (
         <Animated.View style={styles.container}  entering={FadeInLeft.duration(400).delay(400)}  >
             <Text style={styles.label}>Estimated Departure Time:</Text><Text style={{...styles.text, ...styles.primaryText}}>{estimated_departure_time}</Text>
-            <Text style={{...styles.label, fontSize: 14} }>Scheduled Time:</Text><Text style={{...styles.text, ...styles.secondaryText}}>{departure_time}</Text>
+            <Text style={{...styles.label} }>Scheduled Time:</Text><Text style={{...styles.text, ...styles.secondaryText}}>{departure_time}</Text>
         </Animated.View>
     )
 }
@@ -43,17 +41,17 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins_Bold',
     },
     primaryText:{
-        fontSize: getFontSize(28),
-        lineHeight: getFontSize(32),
+        fontSize: Fonts.xl2,
+        lineHeight: LineHeights.xl2,
     },
     secondaryText:{
-        fontSize: getFontSize(20),
-        lineHeight: getFontSize(24)
+        fontSize: Fonts.xl,
+        lineHeight: LineHeights.xl,
     },
     label: {
         color: Colors.text,
-        fontSize: getFontSize(16),
-        lineHeight: getFontSize(20),
+        fontSize: Fonts.sm,
+        lineHeight: LineHeights.sm,
         fontFamily:'Poppins_Bold',
         textTransform: "uppercase"
     }

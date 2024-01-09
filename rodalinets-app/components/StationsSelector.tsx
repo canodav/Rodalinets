@@ -22,11 +22,9 @@ export const StationsSelector = () => {
   const loadLastTravel = useStationStore((state) => state.loadLastTravel);
 
   const swapStations = () => {
-    if (destinationStation && departureStation) {
-      const departureStationAux = departureStation;
-      setDepartureStation(destinationStation);
-      setDestinationStation(departureStationAux);
-    }
+    const departureStationAux = departureStation;
+    setDepartureStation(destinationStation);
+    setDestinationStation(departureStationAux);
   };
 
   useEffect(() => {
