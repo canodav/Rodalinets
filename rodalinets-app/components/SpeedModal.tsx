@@ -32,7 +32,7 @@ export const SpeedModal = ({modalVisible, setModalVisible, onPressAction, childr
                 onPressAction();
               }}
             >
-              <Text style={styles.textStyle}>Understood</Text>
+              <Text style={styles.textStyle}>Entès</Text>
             </Pressable>
           </View>
         </View>

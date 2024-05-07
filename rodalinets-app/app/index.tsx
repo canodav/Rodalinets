@@ -1,5 +1,6 @@
 import { StyleSheet, Pressable, Image, Modal } from 'react-native';
 import { Link, useLocalSearchParams } from 'expo-router';
+import * as Linking from 'expo-linking';
 import { useEffect, useState } from 'react';
 
 import * as Location from 'expo-location';
@@ -25,21 +26,12 @@ const LOCATION_TRACKING = 'background-location-task';
 
 export default function Home() {
   const [modalVisible, setModalVisible] = useState(false);
-  const [speedModalVisible, setSpeedModalVisible] = useState(false);
-  const [speed, setSpeed] = useState<number | null>(0);
-
-  const departureStation = useStationStore((state) => state.departureStation);
-  const destinationStation = useStationStore((state) => state.destinationStation);
-
-  const setDepartureStation = useStationStore((state) => state.setDepartureStation);
-  const setDestinationStation = useStationStore((state) => state.setDestinationStation);
-
-  const setTravelStarted = useTravelStore((state) => state.setTravelStarted);
   const isTravelStarted = useTravelStore((state) => state.isTravelStarted);
 
   const [locationPermissions, setLocationPermissions] = useState({ background: false, foreground: false });
   const [travelIndexText, setTravelIndexText] = useState('');
 
+    
   const startLocationTracking = async () => {
     await Location.startLocationUpdatesAsync(LOCATION_TRACKING, {
       accuracy: Location.Accuracy.High,
@@ -47,21 +39,19 @@ export default function Home() {
       showsBackgroundLocationIndicator: true,
       distanceInterval: 1,
       foregroundService: {
-        notificationTitle: 'Using your location',
-        notificationBody: 'To turn off, go back to the app and switch something off.',
+        notificationTitle: 'Utilitzant la teva ubicació',
+        notificationBody: 'Per desactivar-lo, torna a l\'aplicació i desactiva alguna cosa.',
         killServiceOnDestroy: true,
       },
     });
     const hasStarted = await Location.hasStartedLocationUpdatesAsync(LOCATION_TRACKING);
   };
 
-  const stopLocation = () => {
-    setTravelStarted(false);
-    TaskManager.isTaskRegisteredAsync(LOCATION_TRACKING).then((tracking) => {
-      if (tracking) {
-        Location.stopLocationUpdatesAsync(LOCATION_TRACKING);
-      }
-    });
+  const stopLocationTracking = async () => {
+    const isTracking = await Location.hasStartedLocationUpdatesAsync(LOCATION_TRACKING);
+    if (isTracking) {
+      await Location.stopLocationUpdatesAsync(LOCATION_TRACKING);
+    }
   };
 
   const generateAndStoreUserId = async () => {
@@ -78,34 +68,46 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    setModalVisible(true);
-    generateAndStoreUserId();
-    //startLocationTracking();
-    const intervalId = setInterval(() => {
-      checkSpeed();
-    }, 10000);
+  const checkLocationPermissions = async () => {
+    const foreground = await Location.getForegroundPermissionsAsync()
+    const background = await Location.getBackgroundPermissionsAsync()
+    
+    setLocationPermissions({ background: background.status === 'granted', foreground: foreground.status === 'granted' });
+  }
 
-    // Clear the interval when the component is unmounted
-    return () => clearInterval(intervalId);
+  useEffect(() => {
+    if (isTravelStarted) {
+      startLocationTracking();
+    } else {
+      stopLocationTracking();
+    }
+  }, [isTravelStarted]);
+
+
+  useEffect(() => {
+    checkLocationPermissions();
+   
+    if(!locationPermissions.background || !locationPermissions.foreground){
+      setModalVisible(true);      
+    }
+    generateAndStoreUserId();
   }, []);
 
-  const checkSpeed = async () => {
-    const location = await Location.getCurrentPositionAsync({});
-    setSpeed(location.coords.speed);
-    //console.log("these are the locations", location);
-  };
 
   const requestLocationPermission = async () => {
+
     let resf = await Location.requestForegroundPermissionsAsync();
     let resb = await Location.requestBackgroundPermissionsAsync();
 
+    
     if (resb.status !== 'granted' || resf.status !== 'granted') {
       setModalVisible(true);
     }
     setLocationPermissions({ background: resb.status === 'granted', foreground: resf.status === 'granted' });
-    if (resf.status !== 'granted' && resb.status !== 'granted') {
+    console.log(resf.status !== 'granted' , resb.status !== 'granted')
+    if (resf.status !== 'granted' || resb.status !== 'granted') {
       console.log('Permission to access location was denied');
+      Linking.openSettings()
     } else {
       console.log('Permission to access location granted');
     }
@@ -120,12 +122,11 @@ export default function Home() {
             <Timetable />
           </View>
           <TravelIndex text={travelIndexText}></TravelIndex>
-          <SpeedModal modalVisible={speedModalVisible} setModalVisible={setSpeedModalVisible} onPressAction={() => console.log('aaaa')}>
-            <Text>Este es el modal {speed}</Text>
-          </SpeedModal>
         </>
       ) : (
-        <AskLocationModal modalVisible={modalVisible} setModalVisible={setModalVisible} onPressAction={requestLocationPermission} />
+        <>
+          <AskLocationModal modalVisible={modalVisible} setModalVisible={setModalVisible} onPressAction={requestLocationPermission} />
+        </>
       )}
     </>
   );
@@ -138,50 +139,22 @@ TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
   }
   if (data) {
     const { locations } = data;
-    console.log(locations);
     let latitude = locations[0].coords.latitude;
     let longitude = locations[0].coords.longitude;
-
-    //let location = await Location.getCurrentPositionAsync({});
+    let speed = locations[0].coords.speed;
     try {
       const travelId = await AsyncStorage.getItem('travelId');
-      let isTravelStartedString = await AsyncStorage.getItem('isTravelStarted');
-      const isTravelStarted = isTravelStartedString == 'true';
-
-      console.log({ isTravelStarted });
-      if (!isTravelStarted) {
-        console.log('just checking speed', locations[0].coords.speed);
-        fetch(`https://rodalinets.upf.edu/notification`, {
+        fetch(`https://rodalinets.upf.edu/location?id=${travelId}&latitude=${latitude}&longitude=${longitude}&speed=${speed}`,
+        {
           method: 'POST',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ message: `just checking speed ${locations[0].coords.speed}` }),
-        });
-      } else {
-        console.log('now im checking coords and sending to the server');
-        fetch(`https://rodalinets.upf.edu/notification`, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ message: 'now im checking coords and sending to the server' }),
-        });
-        /*
-          fetch(`https://rodalinets.upf.edu/location?id=${travelId}&latitude=${latitude}&longitude=${longitude}`,
-          {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-          }).then(response => response.json())
-          .then(data => {
-          });*/
+        }).then(response => response.json())
+   
       }
-    } catch (error) {
+    catch (error) {
       console.log('Error fetching location: ' + error.message);
     }
   }
@@ -194,7 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     gap: 20,
     paddingTop: 0,
-    padding: 20,
+    padding: 14,
     zIndex: 1,
     elevation: 0,
     backgroundColor: Colors.background,

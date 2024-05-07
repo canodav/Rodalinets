@@ -12,7 +12,8 @@ import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTimin
 export const TimetableSkeleton = () => {
   return (
     <View style={styles.container}>
-      <View style={[styles.card]}></View>
+      <View style={[styles.smallCard]}></View>
+      <View style={[styles.smallCard]}></View>
       <View style={[styles.smallCard]}></View>
       <View style={[styles.smallCard]}></View>
     </View>
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingHorizontal: 20,
     backgroundColor: Colors.gray,
-    height: 120,
+    height: 180,
     gap: 0,
     zIndex: 1,
     elevation: 1,
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingHorizontal: 20,
     backgroundColor: Colors.gray,
-    height: 120,
+    height: 100,
     gap: 0,
   },
   titleContainer: {

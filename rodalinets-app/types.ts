@@ -38,6 +38,11 @@ export type TrainArrival = {
   arrival_time: string;
   estimated_arrival_time: string;
   isPastTrain: boolean;
+  Train: any;
+  incidenceReports: Array<any>,
+  incidenceReportCount: number,
+  occupancy: Array<any>,
+  noInfo?: boolean
 };
 
 export type Location = {

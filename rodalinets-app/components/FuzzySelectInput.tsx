@@ -93,7 +93,7 @@ export const FuzzySelectInput = ({ data, placeholder, label, style, onSelect, ne
         <View
           style={{
             backgroundColor: '#e9e9e9',
-            height: 40,
+            height: 36,
             borderRadius: 8,
             alignItems: 'center',
             paddingHorizontal: 10,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   textContainer: {
     width: '90%',
     backgroundColor: '#e9e9e9',
-    height: 32,
+    height: 28,
     borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',

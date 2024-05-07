@@ -8,6 +8,7 @@ import { useStationStore } from '@/stores/stationStore';
 
 import { FontAwesome5 } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
+import i18n from '@/i18n';
 
 export const StationsSelector = () => {
   const departureStation = useStationStore((state) => state.departureStation);
@@ -38,8 +39,22 @@ export const StationsSelector = () => {
   return (
     <View style={styles.selectInputContainer}>
       <View style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '92%' }}>
-        <FuzzySelectInput value={departureStation} onSelect={setDepartureStation} style={{ zIndex: 99, elevation: 10 }} data={stations} placeholder="Select a departure station" label="Departure station" /*nearestStationOption={true} */ />
-        <FuzzySelectInput value={destinationStation} onSelect={setDestinationStation} style={{ zIndex: 98, elevation: 8 }} data={stations} placeholder="Select a destination station" label="Destination station" />
+        <FuzzySelectInput
+          value={departureStation}
+          onSelect={setDepartureStation}
+          style={{ zIndex: 99, elevation: 10 }}
+          data={stations}
+          placeholder={i18n.t('departure_station_placeholder')}
+          label={i18n.t('departure_station_label')}
+        />
+        <FuzzySelectInput
+          value={destinationStation}
+          onSelect={setDestinationStation}
+          style={{ zIndex: 98, elevation: 8 }}
+          data={stations}
+          placeholder={i18n.t('destination_station_placeholder')}
+          label={i18n.t('destination_station_label')}
+        />
       </View>
       <TouchableOpacity style={{ height: '100%', width: '8%', alignItems: 'center', flexDirection: 'row', justifyContent: 'center' }} onPress={swapStations}>
         <FontAwesome5 name="exchange-alt" size={16} color="#999" style={{ transform: [{ rotate: '90deg' }] }} />

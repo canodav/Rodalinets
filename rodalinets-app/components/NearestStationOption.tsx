@@ -29,7 +29,7 @@ const NearestStationOption = () => {
     <View>
       <Pressable style={{ paddingVertical: 10, flexDirection: 'row', alignItems: 'center', gap: 5 }} onPress={getNearestStation}>
         <Ionicons name="location-sharp" size={24} color="#00A0D3" />
-        <Text style={{ color: '#00A0D3', fontFamily: 'Poppins_Bold' }}>Nearest Station {nearestStation && <Text style={{ color: Colors.text, fontFamily: 'Poppins_Bold' }}>{nearestStation.name + ' ≈ ' + formatDistance(nearestStation.distance)}</Text>} </Text>
+        <Text style={{ color: '#00A0D3', fontFamily: 'Poppins_Bold' }}>Estació mes propera {nearestStation && <Text style={{ color: Colors.text, fontFamily: 'Poppins_Bold' }}>{nearestStation.name + ' ≈ ' + formatDistance(nearestStation.distance)}</Text>} </Text>
       </Pressable>
       <View style={{ width: '100%', height: 1.3, backgroundColor: '#e9e9e9' }} />
     </View>

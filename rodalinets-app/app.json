@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "rodalinets-app",
+    "name": "Rodalinets",
     "slug": "rodalinets-app",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -38,7 +38,8 @@
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
           "isAndroidBackgroundLocationEnabled": true
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true,

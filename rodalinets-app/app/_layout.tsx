@@ -55,9 +55,11 @@ export default function RootLayout() {
 
 const Header = () => {
   return (
-    <Text style={{ fontFamily: 'Poppins_Black', fontSize: Fonts.xl4, lineHeight: LineHeights.xl4 }}>
-      RODALI<Text style={{ color: Colors.tint }}>NETS</Text>
-    </Text>
+    <View >
+      <Text style={{ fontFamily: 'Poppins_Black', fontSize: Fonts.xl4, lineHeight: LineHeights.xl4, flex: 0.6 }}>
+        RODALI<Text style={{ color: Colors.tint }}>NETS</Text>
+      </Text>
+    </View>
   );
 };
 
@@ -83,17 +85,9 @@ function RootLayoutNav() {
           name="travel"
           options={{
             animation: 'slide_from_bottom',
-            animationDuration: 0.01,
-            headerShown: true,
-            headerStyle: {
-              backgroundColor: Colors.background,
-            },
-            headerBackVisible: false,
-            headerShadowVisible: false,
-            headerTitleAlign: 'center',
-            headerTitle: (props) => (
-              <Header />
-            ),
+            presentation: 'transparentModal',
+            headerShown: false,
+            animationDuration: 200,
           }}
         />
         <Stack.Screen
@@ -102,6 +96,20 @@ function RootLayoutNav() {
             presentation: 'transparentModal',
             headerShown: false,
 
+            headerStyle: {
+              backgroundColor: Colors.background,
+            },
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitle: (props) => (
+              <Header />
+            ),
+          }}
+        />
+         <Stack.Screen
+          name="notify"
+          options={{
+            headerShown: true,
             headerStyle: {
               backgroundColor: Colors.background,
             },

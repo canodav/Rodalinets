@@ -30,13 +30,6 @@ export const StationProgress = ({ stations, currentStation }: StationProgressPro
 
     const closestStations = sortedStations.slice(0, 2);
 
-    console.log(
-      closestStations.map((station) => ({
-        name: station.name,
-        dist: station.distance,
-      }))
-    );
-
     const closestStationPercentage = stations.findIndex((station) => closestStations[0].coords == station.coords) * 25;
 
     const distanceBetweenStations = distance(

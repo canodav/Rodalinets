@@ -3,7 +3,6 @@ import React from 'react';
 import Colors from '@/constants/Colors';
 import { ExternalLink } from '@/components/ExternalLink';
 import { Fonts } from '@/constants/Fonts';
-import { Image } from 'expo-image';
 
 type AskLocationModalProps = {
   modalVisible: boolean;
@@ -11,11 +10,10 @@ type AskLocationModalProps = {
   onPressAction: () => void;
 };
 
-const blurhash = '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
-
-export const AskLocationModal = ({ modalVisible, setModalVisible, onPressAction }: AskLocationModalProps) => {
+export const CookiesModal = ({ modalVisible, setModalVisible, onPressAction }: AskLocationModalProps) => {
   return (
     <View style={{ width: '100%', height: '100%', flex: 1, backgroundColor: 'white' }}>
+      <Text>{modalVisible ? "dsdas" : "s"} </Text>
       <Modal
         animationType="slide"
         transparent={true}
@@ -26,12 +24,19 @@ export const AskLocationModal = ({ modalVisible, setModalVisible, onPressAction 
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Image source={require('../assets/images/pin.png')} style={styles.image} contentFit="contain" />
-            <View>
-              <Text style={{ fontSize: Fonts.base, marginBottom: 20, textAlign: 'justify'}}>RODALINETS necessita el vostre permís d'<Text style={{fontWeight: 'bold'}}>ubicació en segon pla</Text> per proporcionar actualitzacions de viatges en temps real i seguiment de rutes, fins i tot quan l'aplicació no es troba en primer pla. La ubicació només s’utilitzarà quan estigui en marxa un viatge. </Text>
-              <Text style={{ fontSize: Fonts.base, textAlign: 'justify'}}>
-              Tingueu en compte que tota la informació recopilada és totalment <Text style={{fontWeight: 'bold'}}>anònima</Text> s'utilitza únicament per millorar la vostra experiència de viatge.</Text>
-            </View>
+            <Text style={[styles.modalText, {fontWeight: 'bold'}]}>{`Rodalinets necessita el vostre consentiment per utilitzar les vostres dades personals per:`}</Text>
+            <Text style={styles.modalText}>
+              {`\n\u2022 Publicitat i continguts personalitzats, publicitat i mesura de continguts, investigació d'audiències i desenvolupament de serveis
+              \n\u2022 Emmagatzemar i/o accedir a la informació en un dispositiu`}
+            </Text>
+            <ExternalLink href="https://rodalinets.com/privacy" style={{width: '100%', marginBottom: 20}} >
+            <Text style={{textAlign: 'left', width: '100%', color: Colors.tint, fontWeight: 'bold', fontSize: Fonts.base,}}>
+              Aprèn més
+            </Text>
+            </ExternalLink>
+
+            <Text style={[styles.modalText, {fontSize: Fonts.sm}]}>Les teves dades personals es processaran i la informació del teu dispositiu (galetes, identificadors únics i altres dades del dispositiu) es podrà emmagatzemar, accedir-hi i compartir-hi o utilitzat específicament per aquest lloc o aplicació. 
+            Alguns proveïdors poden tractar les vostres dades personals sobre la base d'un interès legítim, al qual podeu oposar-vos gestionant les vostres opcions a continuació. Cerqueu un enllaç a la part inferior d'aquesta pàgina o a la nostra política de privadesa on podeu retirar el consentiment.</Text>
             <View style={{ flexDirection: 'row', gap: 10 }}>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
@@ -42,6 +47,7 @@ export const AskLocationModal = ({ modalVisible, setModalVisible, onPressAction 
               >
                 <Text style={styles.textStyle}>Entès</Text>
               </Pressable>
+
             </View>
           </View>
         </View>
@@ -57,12 +63,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 22,
     marginHorizontal: 20,
+
   },
   modalView: {
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 30,
+    padding: 20,
     paddingVertical: 35,
     alignItems: 'center',
     shadowColor: '#000',
@@ -70,13 +77,11 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    gap: 50,
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
     flexDirection: 'column',
-    justifyContent: 'center',
-    width: '100%',
+    width: '100%'
   },
   button: {
     borderRadius: 10,
@@ -101,9 +106,5 @@ const styles = StyleSheet.create({
     fontSize: Fonts.base,
 
     textAlign: 'left',
-  },
-  image: {
-    width: '100%',
-    height: 100,
   },
 });

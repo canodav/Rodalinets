@@ -21,10 +21,10 @@ export const useTimetableStore = create<useTimetableStoreState>((set, get) => ({
     try {
       const { departureStation, destinationStation } = useStationStore.getState();
       if (departureStation && destinationStation) {
-        const currentTime = new Date().valueOf();
-        const response = await fetch(`https://rodalinets.upf.edu/train?fromStationId=${departureStation.id}&toStationId=${destinationStation.id}&currentTime=${currentTime}&limit=3&pastLimit=2`);
+        const currentTime = Date.now();
+        
+        const response = await fetch(`https://rodalinets.upf.edu/train?fromStationId=${departureStation.id}&toStationId=${destinationStation.id}&currentTime=${currentTime}&limit=4&pastLimit=2`);
         const { trains } = await response.json();
-        //console.log(trains);
         set({ timetable: trains });
         get().setLastUpdateTime(new Date().toLocaleString());
       }
