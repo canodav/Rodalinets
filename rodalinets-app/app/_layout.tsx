@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/Colors';
 import { EventProvider } from 'react-native-outside-press';
 import { Fonts, LineHeights } from '@/constants/Fonts';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -68,6 +69,7 @@ function RootLayoutNav() {
 
   return (
     <EventProvider>
+      <GestureHandlerRootView>
       <Stack>
         <Stack.Screen
           name="index"
@@ -121,6 +123,7 @@ function RootLayoutNav() {
           }}
         />
       </Stack>
+      </GestureHandlerRootView>
     </EventProvider>
   );
 }

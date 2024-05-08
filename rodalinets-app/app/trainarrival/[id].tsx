@@ -24,7 +24,6 @@ const details = () => {
 
   const stations = useStationStore((state) => state.stations);
   const departureStation = useStationStore((state) => state.departureStation);
-  const destinationStation = useStationStore((state) => state.destinationStation);
 
   const [outsidePressActivated, setOutsidePressActivated] = useState(true);
 
@@ -44,14 +43,14 @@ const details = () => {
           <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
             <View style={{flexDirection: 'column', flex: 0.45}}>
               <Text style={styles.label}>{i18n.t('departure_time_label')}</Text>
-              <Text style={styles.text}>{trainArrival?.estimated_departure_time}</Text>
+              <Text style={[styles.text]}>{trainArrival?.estimated_departure_time ? trainArrival?.estimated_departure_time : trainArrival?.departure_time}</Text>
             </View>
             <View style={{flex: 0.1, alignItems: 'center'}}>
               <FontAwesome5 name="long-arrow-alt-right" size={24} color={Colors.background} />
             </View>
             <View style={{flexDirection: 'column', flex: 0.45}}>
               <Text style={[styles.label, {textAlign: 'right'}]}>{i18n.t('arrival_time_label')}</Text>
-              <Text style={[styles.text, {textAlign: 'right'}]}>{trainArrival?.estimated_arrival_time}</Text>
+              <Text style={[styles.text, {textAlign: 'right'}]}>{trainArrival?.estimated_arrival_time ? trainArrival?.estimated_arrival_time : trainArrival?.arrival_time}</Text>
             </View>
           </View>
           <StationProgress stations={stations} currentStation={departureStation} />

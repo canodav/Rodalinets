@@ -80,13 +80,13 @@ export const Timetable = () => {
       {isLoading ? (
         <ActivityIndicator size="large" color={Colors.tint} />
       ) : departureStation && destinationStation && timetable?.length ? (
-        <GestureHandlerRootView style={{ height: '100%' }}>
+        <View style={{ height: '100%' }}>
           <ScrollView  style={{ height: '100%' }} ref={scrollViewRef} fadingEdgeLength={100}>
             { timetable.map((item, index) => (
-              <Card style={[{ marginBottom: 8 }, index == 5 ? { marginBottom: 180 } : {}]} incidenceReports={item.incidenceReports} occupancyReports={item.occupancy} departure_time={item.departure_time} estimated_departure_time={item.estimated_departure_time} key={item.Train.id} id={item.Train.id} principal={index == 2 ? true : false} noInfo={Math.round(Math.random()) == 0} animationDelay={200 + 0 * 100} />
+              <Card style={[{ marginBottom: 8 }, index == 5 ? { marginBottom: 180 } : {}]} incidenceReports={item.incidenceReports} occupancyReports={item.occupancy} departure_time={item.departure_time} estimated_departure_time={item.estimated_departure_time} key={item.Train.id} id={item.Train.id} principal={index == 2 ? true : false} noInfo={!item.estimated_departure_time} animationDelay={200 + 0 * 100} />
             ))}
           </ScrollView>
-        </GestureHandlerRootView>
+        </View>
       ) : (
         <TimetableSkeleton></TimetableSkeleton>
       )}

@@ -1,13 +1,7 @@
 import { Text, View, ActivityIndicator, StyleSheet, FlatList, RefreshControl } from 'react-native';
 import { useEffect, useState } from 'react';
 
-import { Card } from '@/components/Card';
 import Colors from '@/constants/Colors';
-import { TrainArrival } from '@/types';
-
-import { useStationStore } from '@/stores/stationStore';
-import { SmallCard } from './SmallCard';
-import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTiming, withRepeat } from 'react-native-reanimated';
 
 export const TimetableSkeleton = () => {
   return (

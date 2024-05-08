@@ -37,6 +37,7 @@ export const TravelIndex = ({ text }: { text: string }) => {
     .runOnJS(true)
     .onEnd((_e, success) => {
       if (success) {
+        console.log("esto es lo que peta")
         router.push('/travel');
       }
     });
@@ -56,7 +57,7 @@ export const TravelIndex = ({ text }: { text: string }) => {
           <Link href={'/travel'} style={{ height: '100%', width: '100%', display: 'flex', flex: 1 }} asChild>
             <Pressable style={{ flexDirection: 'row', width: '100%', backgroundColor: 'white', justifyContent: 'space-between', alignItems: 'center' }}>
               <Text style={[{ fontFamily: 'Poppins_Bold', color: Colors.text }]}>{text}</Text>
-              <Animated.View sharedTransitionTag="sharedTag">
+              <Animated.View sharedTransitionTag="shared">
                 <TouchableOpacity disabled={!departureStation || !destinationStation} onPress={handleTravelToggle} style={[{ borderRadius: 10, paddingHorizontal: 30, paddingTop: 12, paddingBottom: 10, backgroundColor: Colors.tint }]}>
                   <Text style={[{ fontFamily: 'Poppins_Bold', fontSize: Fonts.sm }, !departureStation || !destinationStation ? { color: Colors.text } : { color: 'white' }]}>
                     {isTravelStarted ? i18n.t("end_travel") : i18n.t("start_travel")} <AntDesign name="right" />

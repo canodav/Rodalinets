@@ -22,6 +22,12 @@ import { TravelIndex } from '@/components/TravelIndex';
 import { SpeedModal } from '@/components/SpeedModal';
 import { StationsSelector } from '@/components/StationsSelector';
 
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import type { AdsConsentInterface } from "react-native-google-mobile-ads";
+import Constants, { ExecutionEnvironment } from 'expo-constants';
+
+
+
 const LOCATION_TRACKING = 'background-location-task';
 
 export default function Home() {
@@ -31,7 +37,15 @@ export default function Home() {
   const [locationPermissions, setLocationPermissions] = useState({ background: false, foreground: false });
   const [travelIndexText, setTravelIndexText] = useState('');
 
-    
+
+  //const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
+
+  //let AdsConsent: AdsConsentInterface | undefined = undefined;
+/*
+  if (isExpoGo) {
+      AdsConsent = require("react-native-google-mobile-ads").AdsConsent;
+  }
+    */
   const startLocationTracking = async () => {
     await Location.startLocationUpdatesAsync(LOCATION_TRACKING, {
       accuracy: Location.Accuracy.High,
@@ -121,6 +135,12 @@ export default function Home() {
             <StationsSelector></StationsSelector>
             <Timetable />
           </View>
+          {/*
+          <BannerAd
+            unitId={adUnitId}
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          />
+*/}
           <TravelIndex text={travelIndexText}></TravelIndex>
         </>
       ) : (

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Pressable, TouchableOpacity } from 'react-native';
-import Animated, { FadeInLeft } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams, Link, router } from 'expo-router';
 import * as Location from 'expo-location';
@@ -83,8 +83,9 @@ const Travel = () => {
     .direction(Directions.DOWN)
     .runOnJS(true)
     .onEnd((_e, success) => {
-      if (success) {
-        router.push("/");
+      if (success && router.canGoBack()) {
+
+        router.back();
       }
   });
 
@@ -111,12 +112,12 @@ const Travel = () => {
             <View style={{ flexDirection: 'column', flex: 0.5 }}>
               <Text style={[styles.title]}>{departureStation && departureStation.name}</Text>
               <Text style={[styles.label]}>{i18n.t('departure_time_label')}</Text>
-              <Text style={[styles.text]}>{trainArrival.estimated_departure_time}</Text>
+              <Text style={[styles.text]}>{trainArrival.estimated_departure_time ? trainArrival.estimated_departure_time : trainArrival.departure_time}</Text>
             </View>
             <View style={{ flexDirection: 'column', flex: 0.5 }}>
               <Text style={[styles.title]}>{destinationStation && destinationStation.name}</Text>
               <Text style={[styles.label]}>{i18n.t('arrival_time_label')}</Text>
-              <Text style={[styles.text]}>{trainArrival.estimated_arrival_time}</Text>
+              <Text style={[styles.text]}>{trainArrival.estimated_arrival_time ? trainArrival.estimated_arrival_time : trainArrival.arrival_time}</Text>
             </View>
           </View>
           </View>
@@ -134,7 +135,7 @@ const Travel = () => {
           </View>
          
           <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-            <Animated.View sharedTransitionTag="sharedTag">
+            <Animated.View sharedTransitionTag="shared">
               <TouchableOpacity onPress={isTravelStarted ? handleEndTravel : handleStartTravel} style={[{ borderRadius: 10, paddingHorizontal: 30, paddingTop: 12, paddingBottom: 10, backgroundColor: Colors.tint }]}>
                 <Text style={[{ fontFamily: 'Poppins_Bold', color: Colors.background, fontSize: Fonts.sm }]}>
                   {isTravelStarted ? i18n.t('end_travel') : i18n.t('start_travel')} <AntDesign name="right" />
@@ -176,7 +177,6 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     elevation: 0,
     zIndex: 0,
-    boxShadow: 1,
     height: 580,
     flexDirection: 'column',
     justifyContent: 'space-between',

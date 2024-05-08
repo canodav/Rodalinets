@@ -119,7 +119,7 @@ export const SelectInput = ({ data, placeholder, label, style, onSelect, value, 
                     */
         }
         {isListVisible && (
-          <GestureHandlerRootView
+          <View
             style={{
               position: 'absolute',
               top: 50,
@@ -153,7 +153,7 @@ export const SelectInput = ({ data, placeholder, label, style, onSelect, value, 
                 );
               })}
             </ScrollView>
-          </GestureHandlerRootView>
+          </View>
         )}
       </View>
     </OutsidePressHandler>
