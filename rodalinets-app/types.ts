@@ -39,7 +39,8 @@ export type TrainArrival = {
   estimated_arrival_time: string;
   isPastTrain: boolean;
   Train: any;
-  incidenceReports: Array<any>,
+  TrainId: number | string,
+  incidenceReports : Array<any>,
   incidenceReportCount: number,
   occupancy: Array<any>,
   noInfo?: boolean

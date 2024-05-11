@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Pressable, TouchableOpacity } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { FadeInLeft } from 'react-native-reanimated';
 import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams, Link, router } from 'expo-router';
 import * as Location from 'expo-location';
@@ -30,6 +30,7 @@ const Travel = () => {
   const isTravelStarted = useTravelStore((state) => state.isTravelStarted);
   const startTravel = useTravelStore((state) => state.startTravel);
   const endTravel = useTravelStore((state) => state.endTravel);
+  const startTime = useTravelStore((state) => state.startTime);
 
   const travelId = useTravelStore((state) => state.travelId);
 
@@ -41,6 +42,29 @@ const Travel = () => {
 
   const trainArrival = timetable[2];
 
+  const [travelTime, setTravelTime] = useState('');
+
+  useEffect(() => {
+    let intervalId : Timeout;
+    console.log({isTravelStarted, startTime})
+
+    if (isTravelStarted && startTime) {
+      console.log("asdsadsa")
+      intervalId = setInterval(() => {
+        const now = Date.now();
+        const elapsed = new Date(now - startTime);
+        const minutes = elapsed.getUTCMinutes().toString().padStart(2, '0');
+        const seconds = elapsed.getUTCSeconds().toString().padStart(2, '0');
+        setTravelTime(`${minutes}:${seconds}`);
+      }, 1000); // Update every second
+    } else {
+      setTravelTime('00:00'); 
+    }
+
+    return () => {
+      clearInterval(intervalId); // Clear interval on component unmount or when the conditions change
+    };
+  }, [isTravelStarted, startTime]);
 
 
   const fetchTravelLocations = async (travelId: number) => {
@@ -83,9 +107,8 @@ const Travel = () => {
     .direction(Directions.DOWN)
     .runOnJS(true)
     .onEnd((_e, success) => {
-      if (success && router.canGoBack()) {
-
-        router.back();
+      if (success) {
+        router.push("/");
       }
   });
 
@@ -122,12 +145,12 @@ const Travel = () => {
           </View>
           </View>
           <View  style={{  flex: 1, height: '100%'}}>
+            <Text>Is travel started: {isTravelStarted}</Text>
             <Text style={{fontSize: Fonts.lg, fontWeight: 'bold'}}>{i18n.t('travel_id')}</Text>
             <Text style={{fontFamily: 'Poppins_Bold',fontSize: Fonts.xl3}}>{travelId}</Text>
 
             <Text style={{fontSize: Fonts.lg, fontWeight: 'bold'}}>{i18n.t('travel_time')}</Text>
-            <Text style={{fontFamily: 'Poppins_Bold',fontSize: Fonts.xl3}}>00:21</Text>
-
+            <Text style={{fontFamily: 'Poppins_Bold',fontSize: Fonts.xl3}}>{travelTime}</Text>
             <Text style={{fontSize: Fonts.lg, fontWeight: 'bold'}}>{i18n.t('number_of_contributions')}</Text>
             <Text style={{fontFamily: 'Poppins_Bold',fontSize: Fonts.xl3}}>{locationCount}</Text>
 
@@ -135,13 +158,15 @@ const Travel = () => {
           </View>
          
           <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-            <Animated.View sharedTransitionTag="shared">
+            {/*
+            <Animated.View sharedTransitionTag="sharedTag">
               <TouchableOpacity onPress={isTravelStarted ? handleEndTravel : handleStartTravel} style={[{ borderRadius: 10, paddingHorizontal: 30, paddingTop: 12, paddingBottom: 10, backgroundColor: Colors.tint }]}>
                 <Text style={[{ fontFamily: 'Poppins_Bold', color: Colors.background, fontSize: Fonts.sm }]}>
                   {isTravelStarted ? i18n.t('end_travel') : i18n.t('start_travel')} <AntDesign name="right" />
                 </Text>
               </TouchableOpacity>
             </Animated.View>
+            */}
           </View>
         </View>
       </GestureDetector>
@@ -177,6 +202,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     elevation: 0,
     zIndex: 0,
+    boxShadow: 1,
     height: 580,
     flexDirection: 'column',
     justifyContent: 'space-between',

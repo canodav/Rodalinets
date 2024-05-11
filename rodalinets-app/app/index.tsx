@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, Image, Modal } from 'react-native';
+import { AppState, StyleSheet, Pressable, Image, Modal } from 'react-native';
 import { Link, useLocalSearchParams } from 'expo-router';
 import * as Linking from 'expo-linking';
 import { useEffect, useState } from 'react';
@@ -22,34 +22,29 @@ import { TravelIndex } from '@/components/TravelIndex';
 import { SpeedModal } from '@/components/SpeedModal';
 import { StationsSelector } from '@/components/StationsSelector';
 
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
-import type { AdsConsentInterface } from "react-native-google-mobile-ads";
-import Constants, { ExecutionEnvironment } from 'expo-constants';
-
-
 
 const LOCATION_TRACKING = 'background-location-task';
 
 export default function Home() {
   const [modalVisible, setModalVisible] = useState(false);
   const isTravelStarted = useTravelStore((state) => state.isTravelStarted);
+  const startTravel = useTravelStore((state) => state.startTravel);
+  const setTravelStarted = useTravelStore((state) => state.setTravelStarted);
+
+  const departureStation = useStationStore((state) => state.departureStation);
+  const destinationStation = useStationStore((state) => state.destinationStation);
+  const loadLastTravel = useStationStore((state) => state.loadLastTravel);
+
+
 
   const [locationPermissions, setLocationPermissions] = useState({ background: false, foreground: false });
   const [travelIndexText, setTravelIndexText] = useState('');
 
-
-  //const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
-
-  //let AdsConsent: AdsConsentInterface | undefined = undefined;
-/*
-  if (isExpoGo) {
-      AdsConsent = require("react-native-google-mobile-ads").AdsConsent;
-  }
-    */
+    
   const startLocationTracking = async () => {
     await Location.startLocationUpdatesAsync(LOCATION_TRACKING, {
       accuracy: Location.Accuracy.High,
-      timeInterval: 30000,
+      timeInterval: 20000,
       showsBackgroundLocationIndicator: true,
       distanceInterval: 1,
       foregroundService: {
@@ -83,30 +78,58 @@ export default function Home() {
   };
 
   const checkLocationPermissions = async () => {
-    const foreground = await Location.getForegroundPermissionsAsync()
-    const background = await Location.getBackgroundPermissionsAsync()
-    
-    setLocationPermissions({ background: background.status === 'granted', foreground: foreground.status === 'granted' });
-  }
+    const { status: foregroundStatus } = await Location.getForegroundPermissionsAsync();
+    const { status: backgroundStatus } = await Location.getBackgroundPermissionsAsync();
+    const granted = foregroundStatus === 'granted' && backgroundStatus === 'granted';
+    setLocationPermissions({ background: backgroundStatus === 'granted', foreground: foregroundStatus === 'granted' });
+    return granted;
+  };
+
+  useEffect(() => {
+    async function checkPermissionsAndStartTravel() {
+      const hasPermissions = await checkLocationPermissions();
+      if (!hasPermissions) {
+        setModalVisible(true);
+        return;
+      }
+
+      const userId = await generateAndStoreUserId();
+      if (!isTravelStarted && departureStation && destinationStation) {
+        try {
+          await startTravel(departureStation, destinationStation, userId);
+        } catch (error) {
+          console.error('Failed to start travel:', error);
+        }
+      }
+    }
+
+    if (departureStation && destinationStation) {
+      checkPermissionsAndStartTravel();
+    }
+  }, [departureStation, destinationStation, isTravelStarted]);
+
+  useEffect(() => {
+    loadLastTravel();
+
+    return () => {
+      stopLocationTracking();
+      setTravelStarted(false);
+      console.log("STOPPING ALL REGISTERED TASKS");
+      TaskManager.unregisterAllTasksAsync();
+    };
+  }, []);
 
   useEffect(() => {
     if (isTravelStarted) {
       startLocationTracking();
-    } else {
-      stopLocationTracking();
+      setTimeout(() => {
+        stopLocationTracking();
+        setTravelStarted(false);
+        console.log('Location tracking stopped automatically after 10 minutes');
+      }, 120000);
     }
+    
   }, [isTravelStarted]);
-
-
-  useEffect(() => {
-    checkLocationPermissions();
-   
-    if(!locationPermissions.background || !locationPermissions.foreground){
-      setModalVisible(true);      
-    }
-    generateAndStoreUserId();
-  }, []);
-
 
   const requestLocationPermission = async () => {
 
@@ -135,12 +158,6 @@ export default function Home() {
             <StationsSelector></StationsSelector>
             <Timetable />
           </View>
-          {/*
-          <BannerAd
-            unitId={adUnitId}
-            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-          />
-*/}
           <TravelIndex text={travelIndexText}></TravelIndex>
         </>
       ) : (
@@ -159,11 +176,13 @@ TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
   }
   if (data) {
     const { locations } = data;
+    //console.log(locations)
     let latitude = locations[0].coords.latitude;
     let longitude = locations[0].coords.longitude;
     let speed = locations[0].coords.speed;
     try {
       const travelId = await AsyncStorage.getItem('travelId');
+      /*
         fetch(`https://rodalinets.upf.edu/location?id=${travelId}&latitude=${latitude}&longitude=${longitude}&speed=${speed}`,
         {
           method: 'POST',
@@ -172,7 +191,7 @@ TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
             'Content-Type': 'application/json',
           },
         }).then(response => response.json())
-   
+        */
       }
     catch (error) {
       console.log('Error fetching location: ' + error.message);

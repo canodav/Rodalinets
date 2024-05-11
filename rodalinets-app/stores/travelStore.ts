@@ -4,16 +4,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export type useTravelStoreState = {
     isTravelStarted: boolean;
     travelId: number | null;
-    
+    startTime: number | null;
+    endTime: number | null;
+
     setTravelStarted: (value: boolean) => void,
     setTravelId: (id: number) => void,
     startTravel: (departureStation: any, destinationStation: any, userId: string) => Promise<void>,
     endTravel: () => Promise<void>,
+    setStartTime: (time: number) => void,
+    setEndTime: (time: number) => void,
 };
 
 export const useTravelStore = create<useTravelStoreState>((set, get) => ({
     isTravelStarted: false,
     travelId: null,
+    startTime: null,
+    endTime: null,
+
     setTravelId: async (id: number) => {
         await AsyncStorage.setItem('travelId', id.toString());
         set({ travelId: id });
@@ -37,8 +44,10 @@ export const useTravelStore = create<useTravelStoreState>((set, get) => ({
         });
         if (response.status === 200) {
             const data = await response.json();
+            const startTime = Date.now();
             get().setTravelId(data.id);
             get().setTravelStarted(true);
+            get().setStartTime(startTime);
             setTimeout(() => {
                 get().endTravel();
             }, 20 * 60 * 1000);
@@ -48,6 +57,7 @@ export const useTravelStore = create<useTravelStoreState>((set, get) => ({
     },
     endTravel: async () => {
         const travelId = get().travelId;
+        const endTime = Date.now();
         if (!travelId) return;
         
         const response = await fetch('https://rodalinets.upf.edu/travel/' + travelId, {
@@ -62,8 +72,17 @@ export const useTravelStore = create<useTravelStoreState>((set, get) => ({
         });
         if (response.status === 200) {
             get().setTravelStarted(false);
+            get().setEndTime(endTime);
         } else {
             throw new Error(`Request failed with status: ${response.status}`);
         }
+    },
+    setStartTime: async (time: number) => {
+        await AsyncStorage.setItem('startTime', time.toString());
+        set({ startTime: time });
+    },
+    setEndTime: async (time: number) => {
+        await AsyncStorage.setItem('endTime', time.toString());
+        set({ endTime: time });
     },
 }));

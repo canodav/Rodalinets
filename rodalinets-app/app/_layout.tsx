@@ -1,7 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { SplashScreen, Stack } from 'expo-router';
+import { SplashScreen, Stack, router } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme, PixelRatio } from 'react-native';
 import { View, Text } from '@/components/Themed';
@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/Colors';
 import { EventProvider } from 'react-native-outside-press';
 import { Fonts, LineHeights } from '@/constants/Fonts';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -56,10 +56,14 @@ export default function RootLayout() {
 
 const Header = () => {
   return (
-    <View >
-      <Text style={{ fontFamily: 'Poppins_Black', fontSize: Fonts.xl4, lineHeight: LineHeights.xl4, flex: 0.6 }}>
+    <View style={{flexDirection: 'row', width: '94%', justifyContent: 'space-between', alignContent: 'center'}}>
+      <View style={{flex: 0.15}}></View>
+      <Text style={{ fontFamily: 'Poppins_Black', fontSize: Fonts.xl4, lineHeight: LineHeights.xl4, flex: 0.7 }}>
         RODALI<Text style={{ color: Colors.tint }}>NETS</Text>
       </Text>
+      <TouchableOpacity onPress={() => router.push('/map')} style={{flex: 0.15, justifyContent: 'flex-start', alignItems: 'flex-end', padding: 10, paddingTop:0 }}>
+        <FontAwesome name={'map-o'} size={24} color={Colors.tint} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -69,7 +73,6 @@ function RootLayoutNav() {
 
   return (
     <EventProvider>
-      <GestureHandlerRootView>
       <Stack>
         <Stack.Screen
           name="index"
@@ -81,6 +84,18 @@ function RootLayoutNav() {
             headerShadowVisible: false,
             headerTitleAlign: 'center',
             headerTitle: (props) => <Header />,
+          }}
+        />
+        <Stack.Screen
+          name="map"
+          options={{
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: Colors.background,
+            },
+            headerShadowVisible: false,
+            headerTitleAlign: 'center',
+            headerTitle: (props) => <></>,
           }}
         />
         <Stack.Screen
@@ -123,7 +138,6 @@ function RootLayoutNav() {
           }}
         />
       </Stack>
-      </GestureHandlerRootView>
     </EventProvider>
   );
 }

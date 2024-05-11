@@ -32,7 +32,7 @@ const translations = {
 
   ca: {
     last_update: 'Darrera actualització',
-    estimated_departure_time: "Hora d'arribada estimada",
+    estimated_departure_time: "Hora de sortida estimada",
     fetch_timetables_error: 'Error en obtenir els horaris:',
     scheduled_arrival_time: "Hora d'arribada programada",
     occupation_level: "Nivell d'ocupació",
@@ -58,7 +58,7 @@ const translations = {
   },
   'es-ES': {
     last_update: 'Última actualización',
-    estimated_departure_time: 'Hora de llegada estimada',
+    estimated_departure_time: 'Hora de salida estimada',
     fetch_timetables_error: 'Fallo al obtener los horarios:',
     scheduled_arrival_time: 'Hora de llegada programada',
     occupation_level: 'Nivel de ocupación',

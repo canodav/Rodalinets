@@ -77,6 +77,7 @@ export const Card = ({id, departure_time, estimated_departure_time, incidenceRep
                            
                         </View>
                         <View style={{flex: 0.2, alignItems: 'flex-end', justifyContent: 'flex-end', gap: 10 }}>
+                            <Text>{id}</Text>
                             {noInfo &&
                             <MaterialCommunityIcons name="information-off-outline" size={24}  color={principal ? Colors.background : Colors.text} />
                             }
